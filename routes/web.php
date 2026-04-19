@@ -1,0 +1,81 @@
+<?php
+
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\AgreementController;
+use App\Http\Controllers\Admin\ContactPageController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\MenuPageController;
+use App\Http\Controllers\Admin\EventTypeController;
+use App\Http\Controllers\Admin\ReceiptSignatureController;
+use App\Http\Controllers\Admin\SearchReportController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\SmtpController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+
+Route::redirect('/', '/login');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.user');
+    Route::put('/profile', [ProfileController::class, 'updateDetails'])->name('profile.user.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.user.password');
+    Route::get('/messages', [MenuPageController::class, 'messages'])->name('messages.index');
+    Route::get('/bookings/history', [BookingController::class, 'index'])->name('bookings.history');
+    Route::get('/bookings/yet-to-balance', [BookingController::class, 'yetToBalance'])->name('bookings.balance');
+    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/{bookingId}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+    Route::put('/bookings/{bookingId}', [BookingController::class, 'update'])->name('bookings.update');
+    Route::delete('/bookings/{bookingId}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/bookings/{bookingId}/receipt', [BookingController::class, 'receipt'])->name('bookings.receipt');
+    Route::get('/bookings/{bookingId}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::post('/bookings/{bookingId}/balance', [BookingController::class, 'addBalance'])->name('bookings.balance.add');
+    Route::post('/bookings/{bookingId}/approval', [BookingController::class, 'updateApproval'])->name('bookings.approval.update');
+    Route::get('/bookings/{bookingId}/history', [BookingController::class, 'history'])->name('bookings.audit');
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
+    Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/services/{serviceId}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    Route::put('/services/{serviceId}', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/services/{serviceId}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    Route::get('/settings/agreement', [AgreementController::class, 'edit'])->name('settings.agreement');
+    Route::post('/settings/agreement', [AgreementController::class, 'update'])->name('settings.agreement.update');
+    Route::get('/settings/receipt-signature', [ReceiptSignatureController::class, 'edit'])->name('settings.receipt-signature');
+    Route::post('/settings/receipt-signature', [ReceiptSignatureController::class, 'update'])->name('settings.receipt-signature.update');
+    Route::get('/settings/event-types', [EventTypeController::class, 'index'])->name('settings.event-types');
+    Route::get('/settings/event-types/create', [EventTypeController::class, 'create'])->name('settings.event-types.create');
+    Route::post('/settings/event-types', [EventTypeController::class, 'store'])->name('settings.event-types.store');
+    Route::get('/settings/event-types/{eventTypeId}/edit', [EventTypeController::class, 'edit'])->name('settings.event-types.edit');
+    Route::put('/settings/event-types/{eventTypeId}', [EventTypeController::class, 'update'])->name('settings.event-types.update');
+    Route::delete('/settings/event-types/{eventTypeId}', [EventTypeController::class, 'destroy'])->name('settings.event-types.destroy');
+    Route::get('/settings/users', [UserManagementController::class, 'index'])->name('settings.users');
+    Route::get('/settings/users/create', [UserManagementController::class, 'create'])->name('settings.users.create');
+    Route::post('/settings/users', [UserManagementController::class, 'store'])->name('settings.users.store');
+    Route::get('/settings/users/{userId}', [UserManagementController::class, 'show'])->name('settings.users.show');
+    Route::get('/settings/users/{userId}/edit', [UserManagementController::class, 'edit'])->name('settings.users.edit');
+    Route::put('/settings/users/{userId}', [UserManagementController::class, 'update'])->name('settings.users.update');
+    Route::delete('/settings/users/{userId}', [UserManagementController::class, 'destroy'])->name('settings.users.destroy');
+    Route::post('/settings/users/{userId}/restore', [UserManagementController::class, 'restore'])->name('settings.users.restore');
+    Route::post('/settings/users/roles', [UserManagementController::class, 'storeRole'])->name('settings.users.roles.store');
+    Route::post('/settings/users/permissions', [UserManagementController::class, 'storePermission'])->name('settings.users.permissions.store');
+    Route::get('/website/contact', [ContactPageController::class, 'edit'])->name('website.contact');
+    Route::put('/website/contact', [ContactPageController::class, 'update'])->name('website.contact.update');
+    Route::get('/website/gallery', [GalleryController::class, 'index'])->name('website.gallery');
+    Route::post('/website/gallery/upload-single', [GalleryController::class, 'storeSingle'])->name('website.gallery.single');
+    Route::post('/website/gallery/upload-multiple', [GalleryController::class, 'storeMultiple'])->name('website.gallery.multiple');
+    Route::delete('/website/gallery/{galleryId}', [GalleryController::class, 'destroy'])->name('website.gallery.destroy');
+    Route::get('/website/smtp', [SmtpController::class, 'edit'])->name('website.smtp');
+    Route::put('/website/smtp', [SmtpController::class, 'update'])->name('website.smtp.update');
+    Route::get('/booking-search', [SearchReportController::class, 'bookingSearch'])->name('bookings.search');
+    Route::get('/reports', [SearchReportController::class, 'reports'])->name('reports.index');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+});
