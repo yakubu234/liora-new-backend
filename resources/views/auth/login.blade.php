@@ -8,10 +8,37 @@
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+    <style>
+        .login-logo {
+            margin-bottom: 1rem;
+        }
+
+        .login-logo__mark {
+            width: 92px;
+            height: 92px;
+            margin: 0 auto 0.9rem;
+            border-radius: 22px;
+            background: #fff;
+            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .login-logo__mark img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
+        <div class="login-logo__mark">
+            <img src="{{ asset('logo.png') }}" alt="Liora City logo">
+        </div>
         <a href="#"><b>Liora City</b> Admin</a>
     </div>
 
@@ -72,10 +99,6 @@
                     </div>
                 </div>
             </form>
-
-            <div class="alert alert-light border mt-4 mb-0">
-                <strong>Next step:</strong> once you share the exact feature list, we’ll turn this starter into the full booking operations panel.
-            </div>
         </div>
     </div>
 </div>
