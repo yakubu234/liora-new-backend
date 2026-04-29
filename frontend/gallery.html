@@ -92,36 +92,42 @@
 
     .nav-shell {
       position: relative;
-      min-height: 112px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr);
+      min-height: 60px;
+      display: flex;
       align-items: center;
-      gap: 0;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 18px;
       border-bottom: 3px solid rgba(214, 163, 84, 0.85);
     }
 
     .nav-group {
       display: flex;
       align-items: center;
-      gap: 22px;
-      width: 100%;
+      flex: 1 1 0;
+      min-width: 0;
     }
 
     .nav-group.left {
       justify-content: flex-start;
-      padding-right: 36px;
+      gap: clamp(16px, 1.4vw, 28px);
+      padding-right: 10px;
     }
 
     .nav-group.right {
       justify-content: flex-end;
-      justify-self: stretch;
-      padding-left: 36px;
+      gap: clamp(12px, 1vw, 20px);
+      padding-left: 10px;
     }
 
     .nav-link {
+      flex: 0 0 auto;
+      white-space: nowrap;
       font-family: "Great Vibes", cursive;
-      font-size: 1.72rem;
+      font-size: clamp(1.05rem, 1.45vw, 1.38rem);
+      line-height: 1;
       color: var(--purple);
+      font-weight: 600;
     }
 
     .nav-link:hover {
@@ -129,12 +135,12 @@
     }
 
     .center-brand {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -42%);
-      width: 142px;
-      height: 142px;
+      position: relative;
+      flex: 0 0 100px;
+      width: 100px;
+      height: 100px;
+      margin: 0;
+      transform: translateY(24px);
       padding: 12px;
       border-radius: 50%;
       background: var(--white);
@@ -162,6 +168,16 @@
       color: var(--white);
       font-weight: 600;
       box-shadow: 0 14px 32px rgba(214, 163, 84, 0.24);
+    }
+
+    .nav-cta {
+      flex: 0 0 auto;
+      min-height: 30px;
+      max-height: 30px;
+      padding: 0 20px;
+      border-radius: 10px;
+      box-shadow: none;
+      white-space: nowrap;
     }
 
     .menu-toggle {
@@ -474,7 +490,7 @@
           <a class="nav-link" href="index.html#home">Home</a>
           <a class="nav-link" href="index.html#about">About</a>
           <a class="nav-link" href="index.html#services">Service</a>
-          <a class="nav-link" href="index.html#calendar">Availability</a>
+          <a class="nav-link" href="index.html#calendar">Calendar</a>
         </nav>
 
         <a class="center-brand" href="index.html#home">
@@ -485,8 +501,8 @@
           <a class="nav-link" href="gallery.html">Gallery</a>
           <a class="nav-link" href="index.html#testimonials">Review</a>
           <a class="nav-link" href="index.html#contact">Contact</a>
-          <a class="btn" href="index.html#contact">Book Now</a>
-          <a class="nav-link" href="#">Login</a>
+          <a class="btn nav-cta" href="index.html#contact">Book Now</a>
+          <a class="nav-link" href="https://dashboard.lioracityeventcenter.com/">Login</a>
         </div>
 
         <button class="menu-toggle" type="button" aria-label="Open menu">
@@ -499,12 +515,12 @@
           <a href="index.html#home">Home</a>
           <a href="index.html#about">About</a>
           <a href="index.html#services">Services</a>
-          <a href="index.html#calendar">Availability</a>
+          <a href="index.html#calendar">Calendar</a>
           <a href="gallery.html">Gallery</a>
-          <a href="index.html#coverage">Coverage</a>
-          <a href="index.html#testimonials">Testimonials</a>
+          <a href="index.html#testimonials">Review</a>
           <a href="index.html#contact">Contact</a>
-          <a href="#">Login</a>
+          <a href="index.html#contact">Book Now</a>
+          <a href="https://dashboard.lioracityeventcenter.com/">Login</a>
         </nav>
       </div>
     </div>
