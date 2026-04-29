@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LioraCity Event Center | Elegant Event Hall</title>
+  <meta name="description" content="LioraCity Event Center is an elegant event hall for weddings, receptions, birthdays, conferences, and private events. Check availability, explore services, view the gallery, and contact us.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="frontend_assets/vendors/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="frontend_assets/vendors/swiper/swiper-bundle.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Jost:wght@400;500;600;700&display=swap');
+
+    :root {
+      --pink: #d6a354;
+      --pink-deep: #b8812d;
+      --purple: #35114d;
+      --purple-soft: #4c2068;
+      --cream: #fff7fb;
+      --cream-deep: #f8edf4;
+      --text: #40214f;
+      --muted: #7b6486;
+      --white: #ffffff;
+      --line: rgba(64, 33, 79, 0.12);
+      --shadow: 0 18px 50px rgba(56, 22, 77, 0.14);
+      --radius-lg: 34px;
+      --radius-md: 24px;
+      --radius-sm: 18px;
+      --container: 1240px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Jost", sans-serif;
+      background: linear-gradient(180deg, #fffafc 0%, #fff6fb 40%, #fff9fc 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 50px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    .script-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--pink);
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      margin-bottom: 8px;
+    }
+
+    .script-label::before,
+    .script-label::after {
+      content: "";
+      width: 28px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--pink);
+      opacity: 0.9;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: "Cormorant Garamond", serif;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 5.7vw, 5.3rem);
+      color: var(--white);
+      max-width: 11ch;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: clamp(2.35rem, 4.1vw, 3.85rem);
+      color: var(--purple);
+    }
+
+    h3 {
+      font-size: 2rem;
+    }
+
+    .hero-inner h1 {
+      font-size: 34px !important;
+      color: var(--white);
+      max-width: 20ch;
+      margin: 0 auto;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .btn,
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 58px;
+      padding: 0 28px;
+      border-radius: 14px;
+      font-weight: 600;
+      transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .btn {
+      background: var(--pink);
+      color: var(--white);
+      box-shadow: 0 14px 32px rgba(214, 163, 84, 0.26);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+    }
+
+    .btn:hover,
+    .btn-outline:hover,
+    .hero-arrow:hover,
+    .scroll-top:hover {
+      transform: translateY(-2px);
+    }
+
+    .topbar {
+      background: var(--pink);
+      color: var(--white);
+      font-size: 1.02rem;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+    }
+
+    .topbar-list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 26px;
+    }
+
+    .topbar-list i {
+      margin-right: 10px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 1px 0 rgba(214, 163, 84, 0.18);
+    }
+
+    .nav-shell {
+      position: relative;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 18px;
+      border-bottom: 3px solid rgba(214, 163, 84, 0.85);
+    }
+
+    .nav-group {
+      display: flex;
+      align-items: center;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .nav-group.left {
+      justify-content: flex-start;
+      gap: clamp(16px, 1.4vw, 28px);
+      padding-right: 10px;
+    }
+
+    .nav-group.right {
+      justify-content: flex-end;
+      gap: clamp(12px, 1vw, 20px);
+      padding-left: 10px;
+    }
+
+    .nav-link {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(1.05rem, 1.45vw, 1.38rem);
+      line-height: 1;
+      color: var(--purple);
+      font-weight: 600; /* nice bold */
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--pink);
+    }
+
+    .center-brand {
+      position: relative;
+      flex: 0 0 100px;
+      width: 100px;
+      height: 100px;
+      margin: 0;
+      transform: translateY(24px);
+      padding: 12px;
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      z-index: 3;
+    }
+
+    .center-brand img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--pink);
+      color: var(--white);
+      border: none;
+    }
+
+    .mobile-nav {
+      display: none;
+      padding: 18px 0 22px;
+      border-bottom: 2px solid rgba(214, 163, 84, 0.22);
+    }
+
+    .mobile-nav.open {
+      display: block;
+    }
+
+    .mobile-nav-links {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mobile-nav-links a {
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--cream-deep);
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    .nav-cta {
+      flex: 0 0 auto;
+      min-height: 30px;
+      max-height: 30px;
+      padding: 0 20px;
+      border-radius: 10px;
+      box-shadow: none;
+      white-space: nowrap;
+    }
+
+    .hero {
+      padding-top: 0;
+    }
+
+    .hero-slider {
+      position: relative;
+      min-height: 400px;
+      max-height: 500px;
+      overflow: hidden;
+      background: #1a0822;
+    }
+
+    .hero-slide {
+      position: relative;
+      min-height: 400px;
+      max-height: 500px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero-slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(26, 8, 34, 0.28) 0%, rgba(26, 8, 34, 0.62) 70%, rgba(26, 8, 34, 0.7) 100%),
+        rgba(18, 5, 22, 0.18);
+      z-index: 1;
+    }
+
+    .hero-slide img,
+    .hero-slide video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-height: 500px;
+      object-fit: cover;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 170px 0 105px;
+    }
+
+    .hero-inner .script-label {
+      color: #fff2fa;
+      margin-bottom: 18px;
+    }
+
+    .hero-inner .script-label::before,
+    .hero-inner .script-label::after {
+      background: #fff2fa;
+    }
+
+    .hero-copy {
+      font-size: 1rem;
+      color: #fbe5f2;
+      max-width: 760px;
+      margin: 18px auto 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 74px;
+      height: 74px;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--white);
+      border: none;
+      z-index: 4;
+      font-size: 2rem;
+    }
+
+    .hero-prev {
+      left: 0;
+    }
+
+    .hero-next {
+      right: 0;
+    }
+
+    .hero-pagination {
+      position: absolute;
+      bottom: 24px !important;
+      left: 50% !important;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      gap: 10px;
+      width: auto !important;
+    }
+
+    .hero-pagination .swiper-pagination-bullet {
+      width: 44px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.45);
+      opacity: 1;
+    }
+
+    .hero-pagination .swiper-pagination-bullet-active {
+      background: var(--pink);
+    }
+
+    .feature-cards {
+      margin-top: -42px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      overflow: hidden;
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .feature-card {
+      padding: 40px 28px;
+      text-align: center;
+      background: var(--purple);
+      color: var(--white);
+      border-right: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .feature-card:last-child {
+      border-right: none;
+    }
+
+    .feature-card i {
+      font-size: 2.8rem;
+      color: var(--pink);
+      margin-bottom: 18px;
+    }
+
+    .feature-card h3 {
+      font-family: "Great Vibes", cursive;
+      font-size: 2.6rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: #eadff0;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+      min-height: 720px;
+    }
+
+    .arched {
+      position: absolute;
+      overflow: hidden;
+      border: 5px solid var(--pink);
+      background: var(--white);
+      border-radius: 260px 260px 0 0;
+      box-shadow: var(--shadow);
+    }
+
+    .arched img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .arched.large {
+      left: 0;
+      top: 0;
+      width: 49%;
+      height: 620px;
+    }
+
+    .arched.small {
+      right: 0;
+      bottom: 0;
+      width: 48%;
+      height: 560px;
+    }
+
+    .about-badge {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      min-width: 270px;
+      padding: 24px 32px;
+      border-radius: 22px;
+      background: var(--pink);
+      color: var(--white);
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(214, 163, 84, 0.28);
+    }
+
+    .about-badge strong {
+      display: block;
+      font-size: 3.6rem;
+      font-family: "Cormorant Garamond", serif;
+      line-height: 1;
+    }
+
+    .about-badge span {
+      font-size: 1.25rem;
+    }
+
+    .about-copy .script-label,
+    .insurance-copy .script-label,
+    .calendar-copy .script-label,
+    .contact-copy .script-label {
+      justify-content: flex-start;
+    }
+
+    .about-copy h2,
+    .insurance-copy h2,
+    .calendar-copy h2,
+    .contact-copy h2 {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .about-copy p {
+      margin-bottom: 18px;
+    }
+
+    .about-list {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0 34px;
+    }
+
+    .about-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.08rem;
+      color: var(--text);
+    }
+
+    .about-list i {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--pink);
+      font-size: 0.82rem;
+    }
+
+    .stats-band {
+      position: relative;
+      background:
+        linear-gradient(rgba(53, 17, 77, 0.42), rgba(53, 17, 77, 0.42)),
+        url('frontend_assets/images/Background/Footer.jpg') center/cover no-repeat;
+      padding: 70px 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .stat-hex {
+      padding: 44px 22px;
+      text-align: center;
+      color: var(--white);
+      background: linear-gradient(180deg, #d6a354 0%, #b8812d 100%);
+      clip-path: polygon(16% 0, 84% 0, 100% 50%, 84% 100%, 16% 100%, 0 50%);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-hex i {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+
+    .stat-hex strong {
+      display: block;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 3.3rem;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-hex span {
+      font-family: "Great Vibes", cursive;
+      font-size: 2rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .services-slider-shell {
+      position: relative;
+    }
+
+    .services-slider {
+      overflow: hidden;
+    }
+
+    .services-grid.is-slider {
+      display: flex;
+      gap: 0;
+    }
+
+    .service-slide {
+      height: auto;
+    }
+
+    .service-card {
+      overflow: hidden;
+      border-radius: 220px 220px 0 0;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      border: 4px solid var(--pink);
+    }
+
+    .service-media {
+      position: relative;
+      height: 520px;
+    }
+
+    .service-media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .service-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(41, 15, 54, 0.08), rgba(41, 15, 54, 0.72));
+      z-index: 1;
+    }
+
+    .service-content {
+      position: absolute;
+      inset: auto 0 0 0;
+      z-index: 2;
+      padding: 24px 26px 28px;
+      color: var(--white);
+    }
+
+    .service-icon {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      background: var(--pink);
+      clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+      font-size: 1.35rem;
+    }
+
+    .service-content h3 {
+      font-family: "Great Vibes", cursive;
+      font-size: 3rem;
+      margin-bottom: 8px;
+    }
+
+    .service-content p {
+      color: #fbe8f2;
+      margin-bottom: 22px;
+    }
+
+    .service-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(214, 163, 84, 0.92);
+      color: var(--white);
+      z-index: 4;
+      box-shadow: 0 14px 28px rgba(214, 163, 84, 0.24);
+    }
+
+    .service-prev {
+      left: -18px;
+    }
+
+    .service-next {
+      right: -18px;
+    }
+
+    .gallery-preview {
+      background: var(--cream);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .gallery-card {
+      position: relative;
+      overflow: hidden;
+      height: 420px;
+      border-radius: 220px 220px 0 0;
+      border: 4px solid var(--pink);
+      box-shadow: var(--shadow);
+    }
+
+    .gallery-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(44, 15, 54, 0.06), rgba(44, 15, 54, 0.68));
+      z-index: 1;
+    }
+
+    .gallery-meta {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 24px;
+      color: var(--white);
+    }
+
+    .gallery-meta h3 {
+      font-family: "Great Vibes", cursive;
+      font-size: 3rem;
+      margin-bottom: 6px;
+    }
+
+    .gallery-meta p {
+      color: #fbe8f2;
+    }
+
+    .calendar-wrap {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 34px;
+      align-items: start;
+    }
+
+    .calendar-copy {
+      padding-top: 18px;
+    }
+
+    .calendar-panel,
+    .insurance-panel,
+    .testimonial-card,
+    .contact-panel {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+    }
+
+    .calendar-panel {
+      padding: 28px;
+    }
+
+    .calendar-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .calendar-month {
+      font-size: 2.5rem;
+      color: var(--purple);
+    }
+
+    .calendar-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .calendar-controls button,
+    .calendar-select {
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--cream-deep);
+      color: var(--purple);
+    }
+
+    .calendar-controls button {
+      width: 48px;
+    }
+
+    .calendar-select {
+      min-width: 180px;
+      padding: 0 14px;
+    }
+
+    .calendar-weekdays,
+    .calendar-grid-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .calendar-weekdays {
+      margin-bottom: 10px;
+    }
+
+    .calendar-weekdays div {
+      text-align: center;
+      font-weight: 600;
+      color: var(--purple);
+      padding: 10px 0;
+    }
+
+    .day {
+      min-height: 92px;
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: var(--cream-deep);
+      border: 1px solid rgba(64, 33, 79, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .day.empty {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .day strong {
+      color: var(--purple);
+      font-size: 1rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: fit-content;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .chip i {
+      font-size: 0.76rem;
+    }
+
+    .chip-label {
+      line-height: 1;
+    }
+
+    .available {
+      background: rgba(60, 177, 110, 0.14);
+      color: #2a8a57;
+    }
+
+    .booked {
+      background: rgba(214, 163, 84, 0.16);
+      color: var(--pink-deep);
+    }
+
+    .hold {
+      background: rgba(243, 175, 70, 0.18);
+      color: #be7d0a;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+
+    .legend b {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .legend i {
+      font-size: 0.84rem;
+    }
+
+    .insurance-grid {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .insurance-image {
+      min-height: 620px;
+      background: url('frontend_assets/images/622546226_18096354310898177_5006754269211997028_n.jpg') center/cover no-repeat;
+    }
+
+    .insurance-copy {
+      padding: 56px 48px;
+      background:
+        linear-gradient(rgba(53, 17, 77, 0.88), rgba(53, 17, 77, 0.88)),
+        url('frontend_assets/images/Background/Contact.jpg') center/cover no-repeat;
+      color: var(--white);
+    }
+
+    .insurance-copy h2,
+    .insurance-copy p,
+    .insurance-list li {
+      color: var(--white);
+    }
+
+    .insurance-list {
+      display: grid;
+      gap: 22px;
+      margin-top: 26px;
+    }
+
+    .insurance-list li strong {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .testimonial-slider-shell {
+      position: relative;
+      background: linear-gradient(180deg, #fffafc 0%, #fff6fb 40%, #fff9fc 100%) !important;
+      /* border:1px solid red; */
+    }
+
+    .testimonial-slider {
+      overflow: hidden;
+    }
+
+    .testimonial-grid.is-slider {
+      display: flex;
+      gap: 0;
+    }
+
+    .testimonial-slide {
+      height: auto;
+    }
+
+    .testimonial-card {
+      padding: 32px 28px;
+      text-align: center;
+    }
+
+    .testimonial-card .stars {
+      color: var(--pink);
+      letter-spacing: 0.18em;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-card h3 {
+      font-family: "Great Vibes", cursive;
+      font-size: 2.5rem;
+      color: var(--purple);
+      margin: 18px 0 6px;
+    }
+
+    .testimonial-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(214, 163, 84, 0.92);
+      color: var(--white);
+      z-index: 4;
+      box-shadow: 0 14px 28px rgba(214, 163, 84, 0.24);
+    }
+
+    .testimonial-prev {
+      left: -16px;
+    }
+
+    .testimonial-next {
+      right: -16px;
+    }
+
+    .testimonial-arrow.hidden {
+      display: none;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 26px;
+    }
+
+    .contact-copy {
+      padding-top: 14px;
+    }
+
+    .contact-copy p {
+      margin-bottom: 18px;
+    }
+
+    .contact-detail {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      color: var(--text);
+      font-size: 1.04rem;
+    }
+
+    .contact-detail i {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--pink);
+      color: var(--white);
+      flex: 0 0 auto;
+    }
+
+    .contact-panel {
+      padding: 28px;
+    }
+
+    .form-feedback {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-weight: 500;
+    }
+
+    .form-feedback.is-visible {
+      display: block;
+    }
+
+    .form-feedback.success {
+      background: rgba(60, 177, 110, 0.12);
+      color: #256d47;
+      border: 1px solid rgba(60, 177, 110, 0.18);
+    }
+
+    .form-feedback.error {
+      background: rgba(192, 75, 75, 0.1);
+      color: #8a2d2d;
+      border: 1px solid rgba(192, 75, 75, 0.16);
+    }
+
+    .contact-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .field,
+    .field-full {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--cream-deep);
+      color: var(--purple);
+      border-radius: 16px;
+      padding: 15px 16px;
+    }
+
+    textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .footer {
+      background: var(--purple);
+      color: #fbe7f4;
+      padding: 28px 0;
+      margin-top: 90px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .scroll-top {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      background: var(--pink);
+      color: var(--white);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      box-shadow: var(--shadow);
+      z-index: 50;
+    }
+
+    @media (max-width: 1200px) {
+      .nav-group.left,
+      .nav-group.right {
+        padding: 0;
+      }
+
+      .feature-grid,
+      .stats-grid,
+      .services-grid,
+      .gallery-grid,
+      .testimonial-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .about-grid,
+      .calendar-wrap,
+      .insurance-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-visual {
+        min-height: 780px;
+      }
+
+      .insurance-image {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        display: none;
+      }
+
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1100;
+      }
+
+      .nav-shell {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        min-height: 92px;
+        padding: 0 0 18px;
+        gap: 18px;
+      }
+
+      .nav-group {
+        display: none;
+      }
+
+      .center-brand {
+        position: static;
+        flex: 0 0 auto;
+        transform: none;
+        width: 90px;
+        height: 90px;
+        margin: 12px 0 0;
+      }
+
+      .menu-toggle {
+        display: inline-grid;
+        place-items: center;
+        justify-self: end;
+      }
+
+      .hero-slider,
+      .hero-slide {
+        min-height: 360px;
+      }
+
+      main {
+        padding-top: 108px;
+      }
+
+      .hero-inner {
+        padding: 120px 0 88px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section {
+        padding: 50px 0;
+      }
+
+      .feature-grid,
+      .stats-grid,
+      .services-grid,
+      .gallery-grid,
+      .testimonial-grid,
+      .contact-form {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-arrow {
+        width: 54px;
+        height: 64px;
+        font-size: 1.6rem;
+      }
+
+      .service-prev {
+        left: -8px;
+      }
+
+      .service-next {
+        right: -8px;
+      }
+
+      .testimonial-prev {
+        left: -8px;
+      }
+
+      .testimonial-next {
+        right: -8px;
+      }
+
+      .about-visual {
+        min-height: 900px;
+      }
+
+      .arched.large,
+      .arched.small {
+        position: relative;
+        width: 100%;
+        height: 360px;
+      }
+
+      .arched.small {
+        margin-top: 18px;
+      }
+
+      .about-badge {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin: 18px auto 0;
+      }
+
+      .calendar-weekdays,
+      .calendar-grid-days {
+        gap: 6px;
+      }
+
+      .calendar-panel {
+        padding: 20px;
+      }
+
+      .calendar-month {
+        font-size: 2rem;
+      }
+
+      .day {
+        min-height: 80px;
+        padding: 10px 8px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .container {
+        width: min(var(--container), calc(100% - 20px));
+      }
+
+      .hero-slider,
+      .hero-slide {
+        min-height: 320px;
+      }
+
+      .hero-inner {
+        padding: 108px 0 82px;
+      }
+
+      .hero-inner .script-label {
+        font-size: 1.8rem;
+      }
+
+      h1 {
+        max-width: 9ch;
+      }
+
+      .hero-copy {
+        font-size: 0.8rem;
+      }
+
+      .calendar-toolbar {
+        align-items: stretch;
+        margin-bottom: 16px;
+      }
+
+      .calendar-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .calendar-select {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .calendar-panel {
+        padding: 16px 14px;
+        border-radius: 20px;
+      }
+
+      .calendar-month {
+        font-size: 1.45rem;
+        text-align: center;
+        width: 100%;
+      }
+
+      .calendar-controls button,
+      .calendar-select {
+        min-height: 44px;
+      }
+
+      .calendar-weekdays,
+      .calendar-grid-days {
+        gap: 4px;
+      }
+
+      .calendar-weekdays div {
+        padding: 6px 0;
+        font-size: 0.76rem;
+      }
+
+      .day {
+        min-height: 58px;
+        padding: 8px 6px;
+        border-radius: 14px;
+        gap: 8px;
+      }
+
+      .day strong {
+        font-size: 0.88rem;
+      }
+
+      .chip {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+        margin-top: auto;
+      }
+
+      .chip i {
+        font-size: 0.72rem;
+      }
+
+      .chip-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .legend {
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .legend span {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: var(--cream-deep);
+        font-size: 0.84rem;
+      }
+
+      .legend b {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="scroll-top" href="#home" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </a>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-list">
+        <span><i class="fa-solid fa-map-location-dot"></i>No 1 Oko-Oba Road</span>
+        <a href="tel:+2347041167461"><i class="fa-solid fa-phone"></i>+234 704 116 7461</a>
+        <a href="mailto:info@lioracityeventcenter.com"><i class="fa-solid fa-envelope"></i>info@lioracityeventcenter.com</a>
+      </div>
+      <div class="topbar-list">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="nav-shell">
+        <nav class="nav-group left">
+          <a class="nav-link" href="#home">Home</a>
+          <a class="nav-link" href="#about">About</a>
+          <a class="nav-link" href="#services">Service</a>
+          <a class="nav-link" href="#calendar">Calendar</a>
+        </nav>
+
+        <a class="center-brand" href="#home">
+          <img src="logo.png" alt="LioraCity Event Center logo">
+        </a>
+
+        <div class="nav-group right">
+          <a class="nav-link" href="gallery.html">Gallery</a>
+          <a class="nav-link" href="#testimonials">Review</a>
+          <a class="nav-link" href="#contact">Contact</a>
+          <a class="btn nav-cta" href="#contact">Book Now</a>
+          <a class="nav-link" href="#">Login</a>
+        </div>
+
+        <button class="menu-toggle" type="button" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <div class="mobile-nav">
+        <nav class="mobile-nav-links">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#calendar">Calendar</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="#testimonials">Review</a>
+          <a href="#contact">Contact</a>
+          <a href="#contact">Book Now</a>
+          <a href="#">Login</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="swiper hero-slider">
+        <div class="swiper-wrapper">
+          <article class="swiper-slide hero-slide">
+            <img src="frontend_assets/images/624285685_18092783638815065_6039379743567466705_n.jpg" alt="Elegant hall setup for reception">
+            <div class="hero-inner">
+              <div class="script-label">Welcome To LioraCity</div>
+              <h1>Elegant Hall Experiences For Beautiful Celebrations</h1>
+              <p class="hero-copy">A refined venue for weddings, birthdays, receptions, corporate gatherings, and private events, designed to make every booking feel polished from first inquiry to final guest experience.</p>
+              <div class="hero-actions">
+                <a class="btn" href="#contact">Plan Your Event</a>
+                <a class="btn-outline" href="#calendar">Check Availability</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="swiper-slide hero-slide">
+            <img src="frontend_assets/images/476581025_17996613644754593_8383557403479078248_n.webp" alt="Decorated event dining scene">
+            <div class="hero-inner">
+              <div class="script-label">For Weddings & Receptions</div>
+              <h1>Stunning Venue Styling With Memorable Guest Comfort</h1>
+              <p class="hero-copy">Host traditional weddings, white weddings, and receptions in a venue that supports elegant presentation, flexible setup, and picture-ready ambience throughout the day.</p>
+              <div class="hero-actions">
+                <a class="btn" href="#services">Explore Services</a>
+                <a class="btn-outline" href="gallery.html">View Gallery</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="swiper-slide hero-slide">
+            <img src="frontend_assets/images/Venue/Gallery/2.jpg" alt="Prepared venue hall interior">
+            <div class="hero-inner">
+              <div class="script-label">Month By Month Booking View</div>
+              <h1>Know Your Future Dates Before You Commit</h1>
+              <p class="hero-copy">Use the booking calendar to move through future months, see reserved dates, and shortlist open event windows before sending your inquiry to the team.</p>
+              <div class="hero-actions">
+                <a class="btn" href="#calendar">Open Calendar</a>
+                <a class="btn-outline" href="#contact">Send A Message</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <button class="hero-arrow hero-prev" type="button" aria-label="Previous slide">
+          <i class="fa-solid fa-angle-left"></i>
+        </button>
+        <button class="hero-arrow hero-next" type="button" aria-label="Next slide">
+          <i class="fa-solid fa-angle-right"></i>
+        </button>
+        <div class="hero-pagination"></div>
+      </div>
+    </section>
+
+    <section class="feature-cards">
+      <div class="container">
+        <div class="feature-grid">
+          <article class="feature-card">
+            <i class="fa-solid fa-gift"></i>
+            <h3>Custom Packages</h3>
+            <p>Venue options tailored for weddings, receptions, conferences, birthdays, and private functions.</p>
+          </article>
+          <article class="feature-card">
+            <i class="fa-solid fa-handshake"></i>
+            <h3>Trusted Support</h3>
+            <p>Clear communication and booking guidance to help organizers plan with confidence.</p>
+          </article>
+          <article class="feature-card">
+            <i class="fa-solid fa-location-dot"></i>
+            <h3>Exclusive Venue</h3>
+            <p>A hall designed to feel welcoming, polished, and event-ready for memorable gatherings.</p>
+          </article>
+          <article class="feature-card">
+            <i class="fa-solid fa-paintbrush"></i>
+            <h3>Decor Friendly</h3>
+            <p>Avenue for floral styling, branded decor, banquet layouts, and beautiful photo moments.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-visual">
+            <div class="arched large">
+              <img src="frontend_assets/images/649454781_17963249748046001_1292898143546602074_n.jpg" alt="Ceremony and guest setup">
+            </div>
+            <div class="arched small">
+              <img src="frontend_assets/images/624285685_18092783638815065_6039379743567466705_n.jpg" alt="Elegant interior lighting">
+            </div>
+            <div class="about-badge">
+              <strong>15+</strong>
+              <span>Years Of Event Experience</span>
+            </div>
+          </div>
+
+          <div class="about-copy">
+            <div class="script-label">About Us</div>
+            <h2>Your Dream Event Venue, Beautifully Prepared</h2>
+            <p>Welcome to LioraCity Event Center, your elegant venue for weddings, receptions, parties, seminars, launches, and meaningful private gatherings. We focus on presentation, comfort, and venue readiness so each event feels smooth and memorable.</p>
+            <p>From stylish decor possibilities to booking guidance and organized guest flow, our goal is to deliver an event hall experience that supports both beautiful moments and practical planning.</p>
+            <ul class="about-list">
+              <li><i class="fa-solid fa-check"></i>Personalized venue planning support</li>
+              <li><i class="fa-solid fa-check"></i>Experienced event coordination guidance</li>
+              <li><i class="fa-solid fa-check"></i>Decor-friendly reception and hall styling</li>
+              <li><i class="fa-solid fa-check"></i>Trusted communication from inquiry to event day</li>
+            </ul>
+            <a class="btn" href="#contact">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-band">
+      <div class="container">
+        <div class="stats-grid">
+          <article class="stat-hex">
+            <i class="fa-solid fa-champagne-glasses"></i>
+            <strong>500+</strong>
+            <span>Events Hosted</span>
+          </article>
+          <article class="stat-hex">
+            <i class="fa-solid fa-heart"></i>
+            <strong>2,000+</strong>
+            <span>Happy Guests Served</span>
+          </article>
+          <article class="stat-hex">
+            <i class="fa-solid fa-calendar-days"></i>
+            <strong>15+</strong>
+            <span>Years In Business</span>
+          </article>
+          <article class="stat-hex">
+            <i class="fa-solid fa-location-dot"></i>
+            <strong>50+</strong>
+            <span>Memorable Moments Created</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-head">
+          <div class="script-label">What We Offer</div>
+          <h2>Our Services</h2>
+        </div>
+
+        <div class="services-slider-shell">
+          <button class="service-arrow service-prev" id="servicePrev" type="button" aria-label="Previous service">
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+          <div class="services-slider swiper" id="servicesSlider">
+            <div class="services-grid swiper-wrapper is-slider">
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/624285685_18092783638815065_6039379743567466705_n.jpg" alt="Wedding reception hall service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-seedling"></i></div>
+                <h3>Wedding Receptions</h3>
+                <p>Beautifully arranged venue support for traditional weddings, white weddings, and elegant receptions.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/619959141_17944990478964935_3974438057357122991_n.jpg" alt="Corporate setup service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-utensils"></i></div>
+                <h3>Corporate Events</h3>
+                <p>Suitable for conferences, trainings, launches, seminars, and professional guest experiences.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/476475069_17996614160754593_1973832839211198971_n.webp" alt="Photo worthy hall service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-camera"></i></div>
+                <h3>Private Celebrations</h3>
+                <p>Perfect for birthdays, anniversaries, family events, and intimate bookings with polished venue ambiance.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/624830800_18131089696513509_7128978072058199497_n.jpg" alt="Round tables service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-circle-nodes"></i></div>
+                <h3>Round Tables</h3>
+                <p>Flexible round-table arrangements that support elegant dining layouts, guest comfort, and polished event presentation.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/624638866_18111534781714382_6306776961202477575_n.jpg" alt="Buffet tables service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-table-list"></i></div>
+                <h3>Buffet Tables</h3>
+                <p>Dedicated buffet table setups designed for smooth food service, organized flow, and guest-friendly access.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/626482506_18153155173390340_974487643122499303_n.jpg" alt="Event chairs service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-chair"></i></div>
+                <h3>Event Chairs</h3>
+                <p>Comfortable event seating that suits weddings, receptions, conferences, and private gatherings of different styles.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/622438667_18064876133266097_8380180000917172659_n.webp" alt="Round white linens service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-sheet-plastic"></i></div>
+                <h3>Round White Linens</h3>
+                <p>Clean white linen coverage for round table styling, giving receptions and formal events a refined finishing touch.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/622546226_18096354310898177_5006754269211997028_n.jpg" alt="Kitchenette area service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-kitchen-set"></i></div>
+                <h3>Kitchenette Area</h3>
+                <p>A practical support area for catering coordination, service prep, and smoother event-day operations behind the scenes.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="service-card service-slide swiper-slide">
+            <div class="service-media">
+              <img src="frontend_assets/images/639482877_18381001030087931_548883455216792199_n.jpg" alt="Rest rooms handicap accessible service">
+              <div class="service-content">
+                <div class="service-icon"><i class="fa-solid fa-wheelchair-move"></i></div>
+                <h3>Rest Rooms</h3>
+                <p>Convenient rest room access, including handicap-accessible facilities, to support guest comfort throughout the event.</p>
+                <a class="btn" href="#contact">Read More</a>
+              </div>
+            </div>
+          </article>
+            </div>
+          </div>
+          <button class="service-arrow service-next" id="serviceNext" type="button" aria-label="Next service">
+            <i class="fa-solid fa-angle-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-preview">
+      <div class="container">
+        <div class="section-head">
+          <div class="script-label">Our Lovely Venue Moments</div>
+          <h2>Gallery Preview</h2>
+        </div>
+
+        <div class="gallery-grid" id="galleryPreviewGrid">
+          <article class="gallery-card">
+            <img src="frontend_assets/images/622546226_18096354310898177_5006754269211997028_n.jpg" alt="Beach-style decorated ceremony preview">
+            <div class="gallery-meta">
+              <h3>Reception Styling</h3>
+              <p>Elegant venue looks built for pictures and memorable arrivals.</p>
+            </div>
+          </article>
+          <article class="gallery-card">
+            <img src="frontend_assets/images/639482877_18381001030087931_548883455216792199_n.jpg" alt="Banquet hall preview">
+            <div class="gallery-meta">
+              <h3>Banquet Hall</h3>
+              <p>A polished atmosphere for celebrations, dinners, and formal occasions.</p>
+            </div>
+          </article>
+          <article class="gallery-card">
+            <img src="frontend_assets/images/622438667_18064876133266097_8380180000917172659_n.webp" alt="Garden and event atmosphere preview">
+            <div class="gallery-meta">
+              <h3>Event Moments</h3>
+              <p>See more decor, hall, and celebration images in the full gallery.</p>
+            </div>
+          </article>
+        </div>
+
+        <div style="text-align:center; margin-top:32px;">
+          <a class="btn" href="gallery.html">Open Full Gallery</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="calendar">
+      <div class="container">
+        <div class="calendar-wrap">
+          <div class="calendar-copy">
+            <div class="script-label">Booking Calendar</div>
+            <h2>Check Future Dates With A Full Monthly View</h2>
+            <p>See current availability month by month before you contact us. Booked dates are clearly marked, hold dates show ongoing inquiries, and open dates help you shortlist your best options faster.</p>
+            <p>This section is designed specifically for your hall website so visitors can quickly move into future months and know whether a preferred date is still likely available.</p>
+            <a class="btn" href="#contact">Request Your Date</a>
+          </div>
+
+          <div class="calendar-panel">
+            <div class="calendar-toolbar">
+              <div class="calendar-month" id="calendarMonthLabel">April 2026</div>
+              <div class="calendar-controls">
+                <button type="button" id="prevMonth" aria-label="Previous month"><i class="fa-solid fa-angle-left"></i></button>
+                <button type="button" id="nextMonth" aria-label="Next month"><i class="fa-solid fa-angle-right"></i></button>
+                <select class="calendar-select" id="monthJump" aria-label="Jump to month"></select>
+              </div>
+            </div>
+            <div class="calendar-weekdays">
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+            </div>
+            <div class="calendar-grid-days" id="calendarGrid"></div>
+            <div class="legend">
+              <span><b style="background:#2a8a57;"></b><i class="fa-solid fa-circle-check"></i>Available</span>
+              <span><b style="background:#b8812d;"></b><i class="fa-solid fa-ban"></i>Booked</span>
+              <span><b style="background:#be7d0a;"></b><i class="fa-solid fa-clock"></i>Hold</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="coverage">
+      <div class="container">
+        <div class="insurance-panel">
+          <div class="insurance-grid">
+            <div class="insurance-image"></div>
+            <div class="insurance-copy">
+              <div class="script-label">Insurance Coverage</div>
+              <h2>Venue Confidence, Clear Terms, And Responsible Event Planning</h2>
+              <p>We present this section as a trust block for serious clients and event organizers, helping them understand that LioraCity handles venue communication and planning expectations with clarity.</p>
+              <ul class="insurance-list">
+                <li>
+                  <strong>Venue Liability Awareness</strong>
+                  <p>Guidance around responsible venue use, event setup expectations, and planning clarity before final confirmation.</p>
+                </li>
+                <li>
+                  <strong>Booking Transparency</strong>
+                  <p>Clear discussions around date reservation, access time, event flow, and venue responsibility before the event day.</p>
+                </li>
+                <li>
+                  <strong>Planner Peace Of Mind</strong>
+                  <p>Useful for families, couples, and corporate planners who want a venue relationship that feels organized and dependable.</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="testimonials">
+      <div class="container">
+        <div class="section-head">
+          <div class="script-label">What Guests Say</div>
+          <h2>Testimonials</h2>
+        </div>
+
+        <div class="testimonial-slider-shell">
+          <button class="testimonial-arrow testimonial-prev hidden" id="testimonialPrev" type="button" aria-label="Previous testimonial">
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+          <div class="testimonial-slider swiper" id="testimonialSlider">
+            <div class="testimonial-grid swiper-wrapper is-slider" id="testimonialGrid">
+          <article class="testimonial-card testimonial-slide swiper-slide">
+            <div class="stars">★★★★★</div>
+            <p>The hall looked beautiful, our guests were comfortable, and the atmosphere felt premium from start to finish. It gave our reception the exact finish we wanted.</p>
+            <h3>Ese O.</h3>
+            <p>Wedding Reception Client</p>
+          </article>
+          <article class="testimonial-card testimonial-slide swiper-slide">
+            <div class="stars">★★★★★</div>
+            <p>The booking process was easy to understand and the calendar helped us choose a date before calling. That made planning much faster for our family event.</p>
+            <h3>Mariam E.</h3>
+            <p>Private Celebration Host</p>
+          </article>
+          <article class="testimonial-card testimonial-slide swiper-slide">
+            <div class="stars">★★★★★</div>
+            <p>We needed a venue that felt formal enough for a corporate gathering but still warm and welcoming. LioraCity delivered that balance very well.</p>
+            <h3>Daniel A.</h3>
+            <p>Corporate Event Organizer</p>
+          </article>
+            </div>
+          </div>
+          <button class="testimonial-arrow testimonial-next hidden" id="testimonialNext" type="button" aria-label="Next testimonial">
+            <i class="fa-solid fa-angle-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-copy">
+            <div class="script-label">Contact Us</div>
+            <h2>Send Us A Message About Your Event</h2>
+            <p>If you have a preferred date, estimated guest count, or event style in mind, send us the details below and we will be ready to discuss availability and next steps.</p>
+
+            <div class="contact-detail">
+              <i class="fa-solid fa-phone"></i>
+              <div>
+                <strong>Phone</strong><br>
+                +234 704 116 7461
+              </div>
+            </div>
+            <div class="contact-detail">
+              <i class="fa-solid fa-envelope"></i>
+              <div>
+                <strong>Email</strong><br>
+                info@lioracityeventcenter.com
+              </div>
+            </div>
+            <div class="contact-detail">
+              <i class="fa-solid fa-location-dot"></i>
+              <div>
+                <strong>Address</strong><br>
+                No 1 Oko-Oba Road, Irirhi Junction, Benin City, Edo State, Nigeria
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-panel">
+            <form class="contact-form" id="contactForm">
+              <div class="field">
+                <label for="fullName">Full Name</label>
+                <input id="fullName" type="text" placeholder="Enter your full name" required>
+              </div>
+              <div class="field">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" placeholder="Enter your email address" required>
+              </div>
+              <div class="field">
+                <label for="phone">Phone Number</label>
+                <input id="phone" type="tel" placeholder="Enter your phone number">
+              </div>
+              <div class="field">
+                <label for="eventType">Event Type</label>
+                <select id="eventType">
+                  <option>Wedding Reception</option>
+                  <option>Birthday Party</option>
+                  <option>Conference</option>
+                  <option>Private Event</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field-full">
+                <label for="eventDate">Preferred Date</label>
+                <input id="eventDate" type="text" placeholder="Example: 14 November 2026">
+              </div>
+              <div class="field-full">
+                <label for="message">Your Message</label>
+                <textarea id="message" placeholder="Tell us about your event, expected guest count, and any venue needs." required></textarea>
+              </div>
+              <div class="field-full">
+                <button class="btn" type="submit">Submit Message</button>
+                <div class="form-feedback" id="contactFormFeedback" role="status" aria-live="polite"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 LioraCity Event Center. All rights reserved.</span>
+      <span>One-page event hall website inspired by a romantic editorial venue style.</span>
+    </div>
+  </footer>
+
+  <script src="frontend_assets/vendors/swiper/swiper-bundle.min.js"></script>
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileNav = document.querySelector('.mobile-nav');
+
+    menuToggle.addEventListener('click', () => {
+      mobileNav.classList.toggle('open');
+      menuToggle.innerHTML = mobileNav.classList.contains('open')
+        ? '<i class="fa-solid fa-xmark"></i>'
+        : '<i class="fa-solid fa-bars"></i>';
+    });
+
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        menuToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      });
+    });
+
+    const monthLabel = document.getElementById('calendarMonthLabel');
+    const monthJump = document.getElementById('monthJump');
+    const calendarGrid = document.getElementById('calendarGrid');
+    const prevMonthBtn = document.getElementById('prevMonth');
+    const nextMonthBtn = document.getElementById('nextMonth');
+    const servicePrev = document.getElementById('servicePrev');
+    const serviceNext = document.getElementById('serviceNext');
+    const heroSliderWrapper = document.querySelector('.hero-slider .swiper-wrapper');
+    const galleryPreviewGrid = document.getElementById('galleryPreviewGrid');
+    const testimonialGrid = document.getElementById('testimonialGrid');
+    const testimonialSlider = document.getElementById('testimonialSlider');
+    const testimonialPrev = document.getElementById('testimonialPrev');
+    const testimonialNext = document.getElementById('testimonialNext');
+    const API_BASE_URL = window.LIORACITY_API_BASE_URL || 'http://localhost:8000';
+    const CALENDAR_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/public/calendar-availability`;
+    const SLIDER_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/public/slider-images`;
+    const GALLERY_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/public/gallery-images`;
+    const TESTIMONIAL_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/public/testimonials`;
+    const MESSAGE_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/public/messages`;
+    const bookingData = {};
+    const baseDate = new Date();
+    baseDate.setDate(1);
+    baseDate.setHours(0, 0, 0, 0);
+    const maxOffset = 10;
+    let currentOffset = 0;
+    let heroSwiper = null;
+    let serviceSwiper = null;
+    let testimonialSwiper = null;
+
+    function pad(num) {
+      return String(num).padStart(2, '0');
+    }
+
+    function buildMonthOptions() {
+      monthJump.innerHTML = '';
+
+      for (let i = 0; i <= maxOffset; i += 1) {
+        const optionDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = optionDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+        monthJump.appendChild(option);
+      }
+    }
+
+    function getStatus(status) {
+      if (status === 'booked') {
+        return { text: 'Booked', className: 'booked', icon: 'fa-ban' };
+      }
+      if (status === 'hold') {
+        return { text: 'Hold', className: 'hold', icon: 'fa-clock' };
+      }
+      return { text: 'Available', className: 'available', icon: 'fa-circle-check' };
+    }
+
+    function formatIsoDate(date) {
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+
+    function setCalendarMessage(message) {
+      calendarGrid.innerHTML = `<div class="day" style="grid-column: 1 / -1; min-height: auto;"><strong>${message}</strong></div>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function initializeHeroSlider() {
+      if (heroSwiper) {
+        heroSwiper.destroy(true, true);
+      }
+
+      heroSwiper = new Swiper('.hero-slider', {
+        loop: true,
+        speed: 850,
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false
+        },
+        pagination: {
+          el: '.hero-pagination',
+          clickable: true
+        },
+        navigation: {
+          prevEl: '.hero-prev',
+          nextEl: '.hero-next'
+        }
+      });
+    }
+
+    function initializeServiceSlider() {
+      if (!servicePrev || !serviceNext) {
+        return;
+      }
+
+      if (serviceSwiper) {
+        serviceSwiper.destroy(true, true);
+      }
+
+      serviceSwiper = new Swiper('#servicesSlider', {
+        slidesPerView: 3,
+        spaceBetween: 22,
+        speed: 700,
+        navigation: {
+          prevEl: '#servicePrev',
+          nextEl: '#serviceNext'
+        },
+        breakpoints: {
+          0: {
+            slidesPerView: 1
+          },
+          768: {
+            slidesPerView: 2
+          },
+          1200: {
+            slidesPerView: 3
+          }
+        }
+      });
+    }
+
+    function appendVideoSlide(videoSlide) {
+      if (!heroSliderWrapper || !videoSlide || !videoSlide.video_url) {
+        return;
+      }
+
+      if (heroSliderWrapper.querySelector('[data-dynamic-video-slide="true"]')) {
+        return;
+      }
+
+      const article = document.createElement('article');
+      article.className = 'swiper-slide hero-slide';
+      article.setAttribute('data-dynamic-video-slide', 'true');
+      article.setAttribute('data-swiper-autoplay', '9000');
+      article.innerHTML = `
+        <video autoplay muted loop playsinline preload="metadata" aria-label="${videoSlide.heading || 'LioraCity hero video slide'}">
+          <source src="${videoSlide.video_url}" type="${videoSlide.mime_type || 'video/mp4'}">
+        </video>
+        <div class="hero-inner">
+          <div class="script-label">Venue In Motion</div>
+          <h1>${videoSlide.heading || 'See The Space Come Alive Before Your Event Day'}</h1>
+          <p class="hero-copy">${videoSlide.text || 'Watch a closer look at the venue atmosphere, decor flow, and event-ready setup inside LioraCity Event Center.'}</p>
+          <div class="hero-actions">
+            <a class="btn" href="gallery.html">View Gallery</a>
+            <a class="btn-outline" href="#contact">Book A Tour</a>
+          </div>
+        </div>
+      `;
+
+      heroSliderWrapper.appendChild(article);
+    }
+
+    async function loadSliderMedia() {
+      try {
+        const response = await fetch(SLIDER_ENDPOINT);
+
+        if (!response.ok) {
+          throw new Error(`Slider request failed with ${response.status}`);
+        }
+
+        const payload = await response.json();
+        const sliders = Array.isArray(payload.data) ? payload.data : [];
+        const slideImages = document.querySelectorAll('.hero-slide img');
+
+        slideImages.forEach((image, index) => {
+          image.decoding = 'async';
+          image.loading = index === 0 ? 'eager' : 'lazy';
+          if (index === 0) {
+            image.fetchPriority = 'high';
+          }
+
+          const slider = sliders[index];
+          if (!slider || !slider.image_url) {
+            return;
+          }
+
+          image.src = slider.image_url;
+          image.alt = slider.heading || image.alt;
+        });
+
+        if (payload.meta && typeof payload.meta.expected_count === 'number' && sliders.length !== payload.meta.expected_count) {
+          console.warn(`Homepage slider expects ${payload.meta.expected_count} images, but API returned ${sliders.length}.`);
+        }
+
+        if (payload.meta && typeof payload.meta.expected_video_count === 'number' && (payload.video ? 1 : 0) !== payload.meta.expected_video_count) {
+          console.warn(`Homepage slider expects ${payload.meta.expected_video_count} video slide, but API returned ${(payload.video ? 1 : 0)}.`);
+        }
+
+        appendVideoSlide(payload.video);
+      } catch (error) {
+        console.error('Unable to load slider images.', error);
+      } finally {
+        initializeHeroSlider();
+      }
+    }
+
+    async function loadGalleryPreview() {
+      if (!galleryPreviewGrid) {
+        return;
+      }
+
+      try {
+        const response = await fetch(GALLERY_ENDPOINT);
+
+        if (!response.ok) {
+          throw new Error(`Gallery request failed with ${response.status}`);
+        }
+
+        const payload = await response.json();
+        const items = Array.isArray(payload.data) ? payload.data.slice(0, 3) : [];
+
+        if (items.length === 0) {
+          return;
+        }
+
+        galleryPreviewGrid.innerHTML = items.map((item, index) => `
+          <article class="gallery-card">
+            <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.heading || `Gallery image ${index + 1}`)}">
+            <div class="gallery-meta">
+              <h3>${escapeHtml(item.heading || `Gallery Image ${index + 1}`)}</h3>
+              <p>${escapeHtml(item.text || 'See more decor, hall, and celebration images in the full gallery.')}</p>
+            </div>
+          </article>
+        `).join('');
+      } catch (error) {
+        console.error('Unable to load gallery preview.', error);
+      }
+    }
+
+    async function loadTestimonials() {
+      if (!testimonialGrid || !testimonialSlider || !testimonialPrev || !testimonialNext) {
+        return;
+      }
+
+      try {
+        const response = await fetch(TESTIMONIAL_ENDPOINT);
+
+        if (!response.ok) {
+          throw new Error(`Testimonial request failed with ${response.status}`);
+        }
+
+        const payload = await response.json();
+        const items = Array.isArray(payload.data) ? payload.data : [];
+
+        if (items.length === 0) {
+          return;
+        }
+
+        testimonialGrid.innerHTML = items.map((item) => `
+          <article class="testimonial-card testimonial-slide">
+            <div class="stars">${'★'.repeat(Math.max(1, Math.min(5, Number(item.rating) || 5)))}</div>
+            <p>${escapeHtml(item.quote || '')}</p>
+            <h3>${escapeHtml(item.name || 'Guest')}</h3>
+            <p>${escapeHtml(item.role || 'Guest')}</p>
+          </article>
+        `).join('');
+
+        testimonialGrid.querySelectorAll('.stars').forEach((element, index) => {
+          const rating = Math.max(1, Math.min(5, Number(items[index]?.rating) || 5));
+          element.textContent = '★'.repeat(rating);
+        });
+
+        if (testimonialSwiper) {
+          testimonialSwiper.destroy(true, true);
+          testimonialSwiper = null;
+        }
+
+        if (items.length > 3) {
+          testimonialSlider.classList.add('swiper');
+          testimonialGrid.classList.add('swiper-wrapper', 'is-slider');
+          Array.from(testimonialGrid.children).forEach((card) => card.classList.add('swiper-slide'));
+          testimonialPrev.classList.remove('hidden');
+          testimonialNext.classList.remove('hidden');
+
+          testimonialSwiper = new Swiper('#testimonialSlider', {
+            slidesPerView: 3,
+            spaceBetween: 22,
+            speed: 700,
+            navigation: {
+              prevEl: '#testimonialPrev',
+              nextEl: '#testimonialNext'
+            },
+            breakpoints: {
+              0: {
+                slidesPerView: 1
+              },
+              768: {
+                slidesPerView: 2
+              },
+              1200: {
+                slidesPerView: 3
+              }
+            }
+          });
+        } else {
+          testimonialSlider.classList.remove('swiper');
+          testimonialGrid.classList.remove('swiper-wrapper', 'is-slider');
+          Array.from(testimonialGrid.children).forEach((card) => card.classList.remove('swiper-slide'));
+          testimonialPrev.classList.add('hidden');
+          testimonialNext.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('Unable to load testimonials.', error);
+      }
+    }
+
+    function renderCalendar(offset) {
+      const activeDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + offset, 1);
+      const year = activeDate.getFullYear();
+      const month = activeDate.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      monthLabel.textContent = activeDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+      monthJump.value = String(offset);
+      prevMonthBtn.disabled = offset === 0;
+      nextMonthBtn.disabled = offset === maxOffset;
+      prevMonthBtn.style.opacity = offset === 0 ? '0.45' : '1';
+      nextMonthBtn.style.opacity = offset === maxOffset ? '0.45' : '1';
+      calendarGrid.innerHTML = '';
+
+      for (let i = 0; i < firstDay; i += 1) {
+        const empty = document.createElement('div');
+        empty.className = 'day empty';
+        calendarGrid.appendChild(empty);
+      }
+
+      for (let day = 1; day <= totalDays; day += 1) {
+        const dateKey = `${year}-${pad(month + 1)}-${pad(day)}`;
+        const state = getStatus(bookingData[dateKey] || 'available');
+        const cell = document.createElement('div');
+        cell.className = 'day';
+        cell.innerHTML = `
+          <strong>${day}</strong>
+          <span class="chip ${state.className}" aria-label="${state.text}">
+            <i class="fa-solid ${state.icon}" aria-hidden="true"></i>
+            <span class="chip-label">${state.text}</span>
+          </span>
+        `;
+        calendarGrid.appendChild(cell);
+      }
+    }
+
+    async function loadCalendarAvailability() {
+      const rangeStart = formatIsoDate(baseDate);
+      const rangeEnd = formatIsoDate(new Date(baseDate.getFullYear(), baseDate.getMonth() + maxOffset + 1, 0));
+
+      monthLabel.textContent = 'Loading calendar...';
+      prevMonthBtn.disabled = true;
+      nextMonthBtn.disabled = true;
+      monthJump.disabled = true;
+      setCalendarMessage('Loading available dates...');
+
+      try {
+        const response = await fetch(`${CALENDAR_ENDPOINT}?start=${rangeStart}&end=${rangeEnd}`);
+
+        if (!response.ok) {
+          throw new Error(`Calendar request failed with ${response.status}`);
+        }
+
+        const payload = await response.json();
+        const entries = Array.isArray(payload.data) ? payload.data : [];
+
+        entries.forEach((entry) => {
+          if (entry && entry.date && entry.status) {
+            bookingData[entry.date] = entry.status;
+          }
+        });
+
+        buildMonthOptions();
+        monthJump.disabled = false;
+        renderCalendar(currentOffset);
+      } catch (error) {
+        console.error('Unable to load calendar availability.', error);
+        buildMonthOptions();
+        renderCalendar(currentOffset);
+        monthLabel.textContent = `${baseDate.toLocaleString('en-US', { month: 'long', year: 'numeric' })} (offline sample unavailable)`;
+      }
+    }
+
+    prevMonthBtn.addEventListener('click', () => {
+      if (currentOffset > 0) {
+        currentOffset -= 1;
+        renderCalendar(currentOffset);
+      }
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+      if (currentOffset < maxOffset) {
+        currentOffset += 1;
+        renderCalendar(currentOffset);
+      }
+    });
+
+    monthJump.addEventListener('change', (event) => {
+      currentOffset = Number(event.target.value);
+      renderCalendar(currentOffset);
+    });
+
+    loadSliderMedia();
+    initializeServiceSlider();
+    loadGalleryPreview();
+    loadTestimonials();
+    loadCalendarAvailability();
+
+    const contactForm = document.getElementById('contactForm');
+    const contactFormFeedback = document.getElementById('contactFormFeedback');
+
+    function showContactFeedback(type, message) {
+      contactFormFeedback.className = `form-feedback ${type} is-visible`;
+      contactFormFeedback.textContent = message;
+    }
+
+    contactForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const submitButton = contactForm.querySelector('button[type="submit"]');
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const eventType = document.getElementById('eventType').value;
+      const eventDate = document.getElementById('eventDate').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending...';
+      contactFormFeedback.className = 'form-feedback';
+      contactFormFeedback.textContent = '';
+
+      try {
+        const payload = new URLSearchParams({
+          full_name: fullName,
+          email,
+          phone,
+          event_type: eventType,
+          event_date: eventDate,
+          message,
+        });
+
+        const response = await fetch(MESSAGE_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          },
+          body: payload.toString(),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Message request failed with ${response.status}`);
+        }
+
+        showContactFeedback('success', 'Your message has been sent successfully. We will get back to you soon.');
+        contactForm.reset();
+      } catch (error) {
+        console.error('Unable to send contact message.', error);
+        showContactFeedback('error', 'We could not send your message right now. Please try again shortly.');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit Message';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -131,7 +131,13 @@
                             <li class="nav-item">
                                 <a href="{{ route('messages.index') }}" class="nav-link {{ request()->routeIs('messages.index') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>View All</p>
+                                    <p>View</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('messages.new') }}" class="nav-link {{ request()->routeIs('messages.new') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>New</p>
                                 </a>
                             </li>
                         </ul>
@@ -242,6 +248,18 @@
                                 <a href="{{ route('website.gallery') }}" class="nav-link {{ request()->routeIs('website.gallery') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Gallery</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('website.testimonials') }}" class="nav-link {{ request()->routeIs('website.testimonials*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Testimonials</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('website.slider') }}" class="nav-link {{ request()->routeIs('website.slider') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Website Slider</p>
                                 </a>
                             </li>
                             <li class="nav-item">

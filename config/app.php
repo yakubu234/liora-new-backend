@@ -54,6 +54,15 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'frontend_urls' => array_values(array_filter(array_map(
+        static fn (string $url): string => trim($url),
+        explode(',', (string) env('FRONTEND_URLS', env('FRONTEND_URL', '*')))
+    ))),
+
+    'website_slider_image_count' => (int) env('WEBSITE_SLIDER_IMAGE_COUNT', 3),
+
+    'website_slider_video_count' => (int) env('WEBSITE_SLIDER_VIDEO_COUNT', 1),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

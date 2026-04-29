@@ -4,19 +4,37 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\AgreementController;
 use App\Http\Controllers\Admin\ContactPageController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\MenuPageController;
 use App\Http\Controllers\Admin\EventTypeController;
 use App\Http\Controllers\Admin\ReceiptSignatureController;
 use App\Http\Controllers\Admin\SearchReportController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\SmtpController;
+use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicAvailabilityController;
+use App\Http\Controllers\PublicGalleryController;
+use App\Http\Controllers\PublicMessageController;
+use App\Http\Controllers\PublicSliderController;
+use App\Http\Controllers\PublicTestimonialController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
+Route::get('/public/calendar-availability', [PublicAvailabilityController::class, 'calendar'])
+    ->name('public.calendar-availability');
+Route::get('/public/slider-images', [PublicSliderController::class, 'index'])
+    ->name('public.slider-images');
+Route::get('/public/gallery-images', [PublicGalleryController::class, 'index'])
+    ->name('public.gallery-images');
+Route::get('/public/testimonials', [PublicTestimonialController::class, 'index'])
+    ->name('public.testimonials');
+Route::post('/public/messages', [PublicMessageController::class, 'store'])
+    ->name('public.messages.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -28,7 +46,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.user');
     Route::put('/profile', [ProfileController::class, 'updateDetails'])->name('profile.user.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.user.password');
-    Route::get('/messages', [MenuPageController::class, 'messages'])->name('messages.index');
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/new', [MessageController::class, 'unread'])->name('messages.new');
+    Route::get('/messages/{messageId}', [MessageController::class, 'show'])->name('messages.show');
+    Route::delete('/messages/{messageId}', [MessageController::class, 'destroy'])->name('messages.destroy');
     Route::get('/bookings/history', [BookingController::class, 'index'])->name('bookings.history');
     Route::get('/bookings/yet-to-balance', [BookingController::class, 'yetToBalance'])->name('bookings.balance');
     Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
@@ -73,6 +94,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/website/gallery/upload-single', [GalleryController::class, 'storeSingle'])->name('website.gallery.single');
     Route::post('/website/gallery/upload-multiple', [GalleryController::class, 'storeMultiple'])->name('website.gallery.multiple');
     Route::delete('/website/gallery/{galleryId}', [GalleryController::class, 'destroy'])->name('website.gallery.destroy');
+    Route::get('/website/testimonials', [TestimonialController::class, 'index'])->name('website.testimonials');
+    Route::post('/website/testimonials', [TestimonialController::class, 'store'])->name('website.testimonials.store');
+    Route::put('/website/testimonials/{testimonialId}', [TestimonialController::class, 'update'])->name('website.testimonials.update');
+    Route::delete('/website/testimonials/{testimonialId}', [TestimonialController::class, 'destroy'])->name('website.testimonials.destroy');
+    Route::get('/website/slider', [SliderController::class, 'index'])->name('website.slider');
+    Route::post('/website/slider/upload-single', [SliderController::class, 'storeSingle'])->name('website.slider.single');
+    Route::post('/website/slider/upload-multiple', [SliderController::class, 'storeMultiple'])->name('website.slider.multiple');
+    Route::delete('/website/slider/{sliderId}', [SliderController::class, 'destroy'])->name('website.slider.destroy');
+    Route::post('/website/slider/upload-video', [SliderController::class, 'storeVideo'])->name('website.slider.video');
+    Route::delete('/website/slider/video/{videoId}', [SliderController::class, 'destroyVideo'])->name('website.slider.video.destroy');
     Route::get('/website/smtp', [SmtpController::class, 'edit'])->name('website.smtp');
     Route::put('/website/smtp', [SmtpController::class, 'update'])->name('website.smtp.update');
     Route::get('/booking-search', [SearchReportController::class, 'bookingSearch'])->name('bookings.search');

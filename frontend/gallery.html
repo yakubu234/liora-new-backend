@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LioraCity Event Center | Gallery</title>
+  <meta name="description" content="Explore the LioraCity Event Center gallery and preview elegant event moments, reception styling, ceremony setups, dining layouts, and venue atmosphere.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="frontend_assets/vendors/font-awesome/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Jost:wght@400;500;600;700&display=swap');
+
+    :root {
+      --pink: #d6a354;
+      --purple: #35114d;
+      --cream: #fff8fc;
+      --cream-deep: #fdf0f7;
+      --text: #40214f;
+      --muted: #7c6687;
+      --white: #ffffff;
+      --line: rgba(64, 33, 79, 0.12);
+      --shadow: 0 18px 50px rgba(56, 22, 77, 0.14);
+      --container: 1240px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Jost", sans-serif;
+      background: linear-gradient(180deg, #fffafc 0%, #fff6fb 45%, #fffafc 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      background: var(--pink);
+      color: var(--white);
+      font-size: 1.02rem;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+    }
+
+    .topbar-list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 26px;
+    }
+
+    .topbar-list i {
+      margin-right: 10px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 1px 0 rgba(214, 163, 84, 0.18);
+    }
+
+    .nav-shell {
+      position: relative;
+      min-height: 112px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr);
+      align-items: center;
+      gap: 0;
+      border-bottom: 3px solid rgba(214, 163, 84, 0.85);
+    }
+
+    .nav-group {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      width: 100%;
+    }
+
+    .nav-group.left {
+      justify-content: flex-start;
+      padding-right: 36px;
+    }
+
+    .nav-group.right {
+      justify-content: flex-end;
+      justify-self: stretch;
+      padding-left: 36px;
+    }
+
+    .nav-link {
+      font-family: "Great Vibes", cursive;
+      font-size: 1.72rem;
+      color: var(--purple);
+    }
+
+    .nav-link:hover {
+      color: var(--pink);
+    }
+
+    .center-brand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -42%);
+      width: 142px;
+      height: 142px;
+      padding: 12px;
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      z-index: 3;
+    }
+
+    .center-brand img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      padding: 0 26px;
+      border-radius: 14px;
+      background: var(--pink);
+      color: var(--white);
+      font-weight: 600;
+      box-shadow: 0 14px 32px rgba(214, 163, 84, 0.24);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--pink);
+      color: var(--white);
+      border: none;
+    }
+
+    .mobile-nav {
+      display: none;
+      padding: 18px 0 22px;
+      border-bottom: 2px solid rgba(214, 163, 84, 0.22);
+    }
+
+    .mobile-nav.open {
+      display: block;
+    }
+
+    .mobile-nav-links {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mobile-nav-links a {
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--cream-deep);
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    .gallery-banner {
+      height: 36px;
+      background:
+        linear-gradient(rgba(53, 17, 77, 0.16), rgba(53, 17, 77, 0.16)),
+        url('frontend_assets/images/Background/Newsletter.jpg') center/cover no-repeat;
+    }
+
+    .section {
+      padding: 56px 0 90px;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 34px;
+    }
+
+    .script-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--pink);
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(1.9rem, 3.5vw, 2.5rem);
+      margin-bottom: 8px;
+    }
+
+    .script-label::before,
+    .script-label::after {
+      content: "";
+      width: 28px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--pink);
+    }
+
+    h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2.35rem, 4vw, 3.85rem);
+      line-height: 1.05;
+      color: var(--purple);
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 1.04rem;
+      line-height: 1.75;
+    }
+
+    .gallery-intro {
+      max-width: 760px;
+      margin: 0 auto 28px;
+      text-align: center;
+    }
+
+    .masonry {
+      column-count: 3;
+      column-gap: 18px;
+    }
+
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 18px;
+      overflow: hidden;
+      border-radius: 14px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .masonry-item img {
+      width: 100%;
+      border-radius: 14px;
+    }
+
+    .cta-panel {
+      margin-top: 30px;
+      padding: 26px 30px;
+      border-radius: 22px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .cta-panel p {
+      max-width: 700px;
+    }
+
+    .footer {
+      background: var(--purple);
+      color: #fbe7f4;
+      padding: 28px 0;
+      margin-top: 80px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .scroll-top {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      background: var(--pink);
+      color: var(--white);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      box-shadow: var(--shadow);
+      z-index: 50;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        display: none;
+      }
+
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1100;
+      }
+
+      .nav-shell {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        min-height: 92px;
+        padding: 0 0 18px;
+        gap: 18px;
+      }
+
+      .nav-group {
+        display: none;
+      }
+
+      .center-brand {
+        position: static;
+        transform: none;
+        width: 90px;
+        height: 90px;
+        margin: 12px 0 0;
+      }
+
+      .menu-toggle {
+        display: inline-grid;
+        place-items: center;
+        justify-self: end;
+      }
+
+      .section {
+        padding: 50px 0 60px;
+      }
+
+      .section-head {
+        margin-bottom: 24px;
+      }
+
+      .gallery-intro {
+        margin-bottom: 22px;
+      }
+
+      .masonry {
+        column-count: 2;
+        column-gap: 14px;
+      }
+
+      .masonry-item {
+        margin-bottom: 14px;
+      }
+
+      .gallery-banner {
+        margin-top: 108px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(var(--container), calc(100% - 20px));
+      }
+
+      .nav-shell {
+        min-height: 84px;
+        padding: 0 0 14px;
+      }
+
+      .center-brand {
+        width: 84px;
+        height: 84px;
+        margin-top: 10px;
+      }
+
+      .gallery-banner {
+        height: 24px;
+      }
+
+      .section {
+        padding: 44px 0 56px;
+      }
+
+      .script-label {
+        font-size: 1.8rem;
+      }
+
+      p {
+        font-size: 0.97rem;
+        line-height: 1.65;
+      }
+
+      .masonry {
+        column-count: 1;
+      }
+
+      .cta-panel {
+        margin-top: 22px;
+        padding: 22px;
+        border-radius: 18px;
+      }
+
+      .cta-panel .btn {
+        width: 100%;
+      }
+
+      .footer {
+        margin-top: 56px;
+      }
+
+      .footer-inner {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .scroll-top {
+        right: 14px;
+        bottom: 14px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="scroll-top" href="#top" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </a>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-list">
+        <span><i class="fa-solid fa-map-location-dot"></i>No 1 Oko-Oba Road</span>
+        <a href="tel:+2347041167461"><i class="fa-solid fa-phone"></i>+234 704 116 7461</a>
+        <a href="mailto:info@lioracityeventcenter.com"><i class="fa-solid fa-envelope"></i>info@lioracityeventcenter.com</a>
+      </div>
+      <div class="topbar-list">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header" id="top">
+    <div class="container">
+      <div class="nav-shell">
+        <nav class="nav-group left">
+          <a class="nav-link" href="index.html#home">Home</a>
+          <a class="nav-link" href="index.html#about">About</a>
+          <a class="nav-link" href="index.html#services">Service</a>
+          <a class="nav-link" href="index.html#calendar">Availability</a>
+        </nav>
+
+        <a class="center-brand" href="index.html#home">
+          <img src="logo.png" alt="LioraCity Event Center logo">
+        </a>
+
+        <div class="nav-group right">
+          <a class="nav-link" href="gallery.html">Gallery</a>
+          <a class="nav-link" href="index.html#testimonials">Review</a>
+          <a class="nav-link" href="index.html#contact">Contact</a>
+          <a class="btn" href="index.html#contact">Book Now</a>
+          <a class="nav-link" href="#">Login</a>
+        </div>
+
+        <button class="menu-toggle" type="button" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <div class="mobile-nav">
+        <nav class="mobile-nav-links">
+          <a href="index.html#home">Home</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#services">Services</a>
+          <a href="index.html#calendar">Availability</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="index.html#coverage">Coverage</a>
+          <a href="index.html#testimonials">Testimonials</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="#">Login</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <div class="gallery-banner"></div>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="script-label">Explore Our Gallery</div>
+          <h1>Our Gallery</h1>
+        </div>
+
+        <div class="gallery-intro">
+          <p>Browse selected venue moments from LioraCity Event Center, including reception styling, ceremony layouts, decor inspiration, dining arrangements, and memorable event atmosphere.</p>
+        </div>
+
+        <div class="masonry" id="galleryMasonry">
+          <article class="masonry-item">
+            <img src="frontend_assets/images/Background/Newsletter.jpg" alt="Elegant floral table styling">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/Venue/Gallery/1.jpg" alt="Venue audience and event moment">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/About/About-2.jpg" alt="Decorated event aisle">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/About/About-1.jpg" alt="Elegant event dining setup">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/Background/Contact.jpg" alt="Outdoor reception dining arrangement">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/Venue/Gallery/2.jpg" alt="Venue hall interior">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/Venue/Gallery/3.jpg" alt="Banquet hall visual">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/About/About-3.jpg" alt="Chandelier and event interior styling">
+          </article>
+          <article class="masonry-item">
+            <img src="frontend_assets/images/Service/Services/Service-3.jpg" alt="Private celebration setup">
+          </article>
+        </div>
+
+        <div class="cta-panel">
+          <div>
+            <div class="script-label" style="font-size:2rem; margin-bottom:4px;">Plan With Confidence</div>
+            <p>Seen enough to picture your event? Return to the homepage to review availability, explore services, and send your booking request.</p>
+          </div>
+          <a class="btn" href="index.html#calendar">Check Availability</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 LioraCity Event Center. All rights reserved.</span>
+      <span>Gallery page designed to match the new homepage style.</span>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileNav = document.querySelector('.mobile-nav');
+    const galleryMasonry = document.getElementById('galleryMasonry');
+    const API_BASE_URL = window.LIORACITY_API_BASE_URL || 'http://localhost:8000';
+    const GALLERY_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/public/gallery-images`;
+
+    menuToggle.addEventListener('click', () => {
+      mobileNav.classList.toggle('open');
+      menuToggle.innerHTML = mobileNav.classList.contains('open')
+        ? '<i class="fa-solid fa-xmark"></i>'
+        : '<i class="fa-solid fa-bars"></i>';
+    });
+
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        menuToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      });
+    });
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    async function loadGalleryPage() {
+      if (!galleryMasonry) {
+        return;
+      }
+
+      try {
+        const response = await fetch(GALLERY_ENDPOINT);
+
+        if (!response.ok) {
+          throw new Error(`Gallery request failed with ${response.status}`);
+        }
+
+        const payload = await response.json();
+        const items = Array.isArray(payload.data) ? payload.data : [];
+
+        if (items.length === 0) {
+          return;
+        }
+
+        galleryMasonry.innerHTML = items.map((item, index) => `
+          <article class="masonry-item">
+            <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.heading || `Gallery image ${index + 1}`)}">
+          </article>
+        `).join('');
+      } catch (error) {
+        console.error('Unable to load gallery page.', error);
+      }
+    }
+
+    loadGalleryPage();
+  </script>
+</body>
+</html>
