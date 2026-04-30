@@ -2028,7 +2028,7 @@
   <footer class="footer">
     <div class="container footer-inner">
       <span>&copy; 2026 LioraCity Event Center. All rights reserved.</span>
-      <span>One-page event hall website inspired by a romantic editorial venue style.</span>
+      <span></span>
     </div>
   </footer>
 
@@ -2503,15 +2503,17 @@
           body: payload.toString(),
         });
 
+        const responseBody = await response.json().catch(() => ({}));
+
         if (!response.ok) {
-          throw new Error(`Message request failed with ${response.status}`);
+          throw new Error(responseBody.message || `Message request failed with ${response.status}`);
         }
 
-        showContactFeedback('success', 'Your message has been sent successfully. We will get back to you soon.');
+        showContactFeedback('success', responseBody.message || 'Your message has been sent successfully. We will get back to you soon.');
         contactForm.reset();
       } catch (error) {
         console.error('Unable to send contact message.', error);
-        showContactFeedback('error', 'We could not send your message right now. Please try again shortly.');
+        showContactFeedback('error', error.message || 'We could not send your message right now. Please try again shortly.');
       } finally {
         submitButton.disabled = false;
         submitButton.textContent = 'Submit Message';

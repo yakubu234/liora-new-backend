@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Services\ContactNotificationMailer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class PublicMessageController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, ContactNotificationMailer $contactNotificationMailer): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'full_name' => ['required', 'string', 'max:200'],
@@ -43,6 +45,16 @@ class PublicMessageController extends Controller
             'status' => 'active',
             'is_read' => false,
         ]);
+
+        try {
+            $contactNotificationMailer->send($validated);
+        } catch (Throwable $throwable) {
+            report($throwable);
+
+            return $this->corsJson([
+                'message' => 'Your message was saved, but the email notification could not be sent. Please review the SMTP settings.',
+            ], $request, 500);
+        }
 
         return $this->corsJson([
             'message' => 'Your message has been sent successfully.',

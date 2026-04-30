@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
 class SmtpController extends Controller
 {
     private const DEFAULT_RECIPIENT = 'info@lioracityeventcenter.com';
-    private const DEFAULT_HOST = 'smtp.gmail.com';
+    private const DEFAULT_HOST = 'smtp.zohocloud.ca';
     private const DEFAULT_PORT = '587';
 
     public function edit(): View
