@@ -30,7 +30,7 @@ class ContactNotificationMailer
 
         config()->set('mail.mailers.smtp', [
             'transport' => 'smtp',
-            'scheme' => 'tls',
+            'scheme' => null,
             'url' => null,
             'host' => $host,
             'port' => $port,
