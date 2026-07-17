@@ -215,23 +215,107 @@
         var customerName = @json($booking['customer_fullname']);
         var pdfName = customerName + '_Invoice_' + new Date().getTime() + '.pdf';
 
-        $('#generatePDF').on('click', function () {
-            var downloadSection = $('#download_section');
-            var cWidth = downloadSection.width();
-            var cHeight = downloadSection.height();
-            var topLeftMargin = 10;
-            var pdfWidth = cWidth + topLeftMargin * 2;
-            var pdfHeight = pdfWidth * 1.5 + topLeftMargin * 2;
-            var totalPDFPages = Math.ceil(cHeight / pdfHeight);
+        function fillReceiptWatermarks() {
+            var section = document.getElementById('download_section');
+            var layer = section ? section.querySelector('.receipt-watermarks') : null;
+            var source = layer ? layer.querySelector('.receipt-watermark') : null;
 
-            html2canvas(downloadSection[0], { allowTaint: true }).then(function (canvas) {
-                var imgData = canvas.toDataURL('image/jpeg', 1.0);
+            if (!section || !layer || !source) {
+                return;
+            }
+
+            var styles = window.getComputedStyle(layer);
+            var columns = Math.max(styles.gridTemplateColumns.split(' ').filter(Boolean).length, 1);
+            var rowHeight = parseFloat(styles.gridAutoRows) || 190;
+            var requiredCount = Math.max(Math.ceil(section.scrollHeight / rowHeight) * columns, 24);
+
+            if (layer.children.length === requiredCount) {
+                return;
+            }
+
+            var fragment = document.createDocumentFragment();
+            for (var index = 0; index < requiredCount; index++) {
+                fragment.appendChild(source.cloneNode(true));
+            }
+            layer.replaceChildren(fragment);
+        }
+
+        window.addEventListener('load', function () {
+            fillReceiptWatermarks();
+            window.requestAnimationFrame(fillReceiptWatermarks);
+        });
+        window.addEventListener('beforeprint', fillReceiptWatermarks);
+
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(fillReceiptWatermarks).observe(document.getElementById('download_section'));
+        }
+
+        $('#generatePDF').on('click', function () {
+            fillReceiptWatermarks();
+            var downloadSection = $('#download_section');
+            var sectionElement = downloadSection[0];
+            var sectionTop = sectionElement.getBoundingClientRect().top;
+            var safeBreaks = Array.from(sectionElement.querySelectorAll(
+                'tr, p, li, h1, h2, h3, h4, .receipt-agreement-heading, .invo-addition-wrap'
+            )).map(function (element) {
+                return element.getBoundingClientRect().bottom - sectionTop;
+            }).filter(function (offset) {
+                return offset > 0 && offset < sectionElement.scrollHeight;
+            }).sort(function (a, b) {
+                return a - b;
+            });
+
+            html2canvas(sectionElement, { allowTaint: true, scale: 2 }).then(function (canvas) {
+                var pdfWidth = 595.28;
+                var pdfHeight = 841.89;
+                var horizontalMargin = 24;
+                var verticalMargin = 28;
+                var usableWidth = pdfWidth - (horizontalMargin * 2);
+                var usableHeight = pdfHeight - (verticalMargin * 2);
+                var maxSliceHeight = Math.floor(usableHeight * canvas.width / usableWidth);
+                var canvasScale = canvas.height / sectionElement.scrollHeight;
+                var canvasBreaks = safeBreaks.map(function (offset) {
+                    return Math.floor(offset * canvasScale);
+                });
                 var pdf = new jsPDF('p', 'pt', [pdfWidth, pdfHeight]);
-                pdf.addImage(imgData, 'JPG', topLeftMargin, topLeftMargin, cWidth, cHeight);
-                for (var i = 1; i < totalPDFPages; i++) {
-                    pdf.addPage(pdfWidth, pdfHeight);
-                    pdf.addImage(imgData, 'JPG', topLeftMargin, -(pdfHeight * i) + topLeftMargin, cWidth, cHeight);
+                var sliceStart = 0;
+                var pageNumber = 0;
+
+                while (sliceStart < canvas.height) {
+                    var targetEnd = Math.min(sliceStart + maxSliceHeight, canvas.height);
+                    var minimumUsefulBreak = sliceStart + (maxSliceHeight * 0.55);
+                    var safeEnd = canvasBreaks.filter(function (point) {
+                        return point >= minimumUsefulBreak && point <= targetEnd - 8;
+                    }).pop();
+                    var sliceEnd = targetEnd === canvas.height ? canvas.height : (safeEnd || targetEnd);
+                    var sliceHeight = Math.max(sliceEnd - sliceStart, 1);
+                    var pageCanvas = document.createElement('canvas');
+                    pageCanvas.width = canvas.width;
+                    pageCanvas.height = sliceHeight;
+                    pageCanvas.getContext('2d').drawImage(
+                        canvas,
+                        0, sliceStart, canvas.width, sliceHeight,
+                        0, 0, canvas.width, sliceHeight
+                    );
+
+                    if (pageNumber > 0) {
+                        pdf.addPage(pdfWidth, pdfHeight);
+                    }
+
+                    var renderedHeight = sliceHeight * usableWidth / canvas.width;
+                    pdf.addImage(
+                        pageCanvas.toDataURL('image/jpeg', 0.96),
+                        'JPG',
+                        horizontalMargin,
+                        verticalMargin,
+                        usableWidth,
+                        renderedHeight
+                    );
+
+                    sliceStart = sliceEnd;
+                    pageNumber++;
                 }
+
                 pdf.save(pdfName);
             });
         });
