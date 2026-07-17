@@ -1,0 +1,6 @@
+window.LIORACITY_API_BASE_URL || 'https://subdomain.domain.com'
+
+in backend
+
+FRONTEND_URL=https://domain.com
+FRONTEND_URLS=https://domain.com,https://www.domain.com

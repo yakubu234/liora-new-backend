@@ -1,0 +1,447 @@
+i want us to now work on the receipt on the view booking details. now the currennt implementation uses the terms and condition table, but the new implementation should use the the receipt signature. so we will now have an agreement and contion that wil be downloaeded simultaenously with the receipt and that uses the record in the terms and condition table. so we need to change the code to reflect that. also we need to make sure that the terms and condition is properly displayed on the receipt. we also need to make sure that the receipt is properly formatted and looks professional. we also need to make sure that the receipt is properly tested and works as expected. we also need to make sure that the receipt is properly integrated with the rest of the system. we also need to make sure that the receipt is properly documented and easy to understand. we also need to make sure that the receipt is properly maintained and updated as needed. we also need to make sure that the receipt is properly secured and protected from unauthorized access. we also need to make sure that the receipt is properly backed up and can be restored in case of data loss. we also need to make sure that the receipt is properly monitored and any issues are promptly addressed. we also need to make sure that the receipt is properly optimized for performance and scalability. we also need to make sure that the receipt is properly compliant with any relevant regulations and standards. we also need to make sure that the receipt is properly user-friendly and easy to navigate. we also need to make sure that the receipt is properly accessible and can be used by people with disabilities. we also need to make sure that the receipt is properly localized and can be used in different languages and regions. we also need to make sure that the receipt is properly tested across different devices and browsers to ensure compatibility. we also need to make sure that the receipt is properly integrated with any third-party services or APIs as needed. we also need to make sure that the receipt is properly maintained and updated as new features or changes are implemented in the system. if possible use the company logo to addd watermark to make things unique in fact let me say just come up with the best thing you can do. the company logo is in the puvblic folder, named logo.png. ensure the logo i uses accross the ssytem
+
+<?php
+include('../conn/database.php');
+error_reporting(E_ALL);
+
+
+$currentUser = $_SESSION["current_user"];
+$data = [];
+
+if(isset($_GET['id']) && !empty($_GET['id'])){
+    $id = $_GET['id'];
+
+    // Fetch user data based on email
+    $sql = "SELECT bookings_services.service_id, bookings_services.name, bookings_services.description, bookings_services.quantity, bookings_services.amount, bookings.*, users.phone AS user_phone, users.email AS user_email, users.fullname AS user_fullname
+    FROM bookings
+    LEFT JOIN bookings_services ON bookings.id = bookings_services.bookings_id
+    LEFT JOIN users ON bookings.user_id = users.id
+    WHERE bookings.bookign_id=:id";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':id', $id , PDO::PARAM_STR);
+    $query->execute();
+    $bookings = $query->fetchAll(PDO::FETCH_ASSOC);
+
+    $data['user_id'] = $bookings[0]['user_id'];
+    $data['booking_id'] = $bookings[0]['bookign_id'];
+    $data['email'] = $bookings[0]['user_email'];
+    $data['phone'] =  $bookings[0]['user_phone'];
+    $data['fullname']  =  $bookings[0]['user_fullname'];
+    $data['type_of_event']  =  $bookings[0]['event_type'];
+    $data['number_of_guest'] =  $bookings[0]['number_of_guest'];
+    $data['from'] =  $bookings[0]['date_start'];
+    $data['time_start'] =  $bookings[0]['time_start'];
+    $data['time_end'] =  $bookings[0]['time_end'];
+    $data['apply_date'] =  $bookings[0]['date_of_application'];
+    $data['tax']  =  $bookings[0]['tax'];
+    $data['message']  =  $bookings[0]['message'];
+    $data['discount'] =  $bookings[0]['discount'];
+     $data['customer_email'] =$bookings[0]['customer_email'];
+     $data['status'] =$bookings[0]['status'];
+         $data['customer_fullname'] = $bookings[0]['customer_fullname'];
+         $data['customer_phone'] = $bookings[0]['customer_phone'];
+         $data['customer_address'] = $bookings[0]['customer_address'];
+         $data['customer_contact_person_fullname'] = $bookings[0]['customer_contact_person_fullname'];
+         $data['customer_contact_person_phone'] = $bookings[0]['customer_contact_person_phone'];
+
+    $services = [];
+    for ($i = 0; $i < count($bookings); $i++) {
+        $service = [
+            'item_id' => $bookings[$i]['service_id'],
+            'service_name' => $bookings[$i]['name'],
+            'service_description' =>$bookings[$i]['description'],
+            'quantity' => $bookings[$i]['quantity'],
+            'price' => $bookings[$i]['amount']
+        ];
+        $services[] = $service;
+    }
+    $data['services'] = $services;
+
+
+    //agreement
+    $sql = "SELECT * FROM agreement";
+    $query = $dbh->prepare($sql);
+    $query->execute();
+
+    $agreement = $query->fetch(PDO::FETCH_ASSOC);
+
+    $booking_id = $data['booking_id'];
+    $action = "printed ticket with booking id  $booking_id ";
+    logAuditTrail($currentUser['id'], $action, $currentUser['email'], $currentUser['fullname'], $data['booking_id']);
+
+    $sql = "SELECT * FROM payments where booking_id=:booking_id ";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
+    $query->execute();
+
+    $payments = $query->fetchAll(PDO::FETCH_ASSOC);
+    $totalPaid = 0;
+    foreach ($payments as $key => $value) {
+        $totalPaid = $totalPaid + remove_commas($value['amount']);
+        # code...
+    }
+
+    // include('booking.single.php');
+}else{
+    echo 'you acidentally viewed this page';
+}
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="zxx" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Digital Invoica</title>
+    <link href="assets/images/favicon/icon.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/media-query.css">
+</head>
+<body>
+    <!--Invoice wrap start here -->
+    <div class="invoice_wrap train-invoice">
+        <div class="invoice-container">
+            <div class="invoice-content-wrap" id="download_section">
+                <!--Header start here -->
+                <header class="train-header" id="invo_header">
+                    <div class="invoice-logo-content">
+                        <div class="invoice-logo">
+                            <div>
+                                <a href="train_booking.html" class="logo"><img src="../assets/images/logo/logo.png" width="200" alt="this is a invoice logo"></a>
+                            </div>
+
+                            <div>
+                                <div class="invo-cont-wrap">
+                                    <div class="invo-social-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_6_108)"><path d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7L12 13L21 7" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath ><rect width="24" height="24" fill="white"/></clipPath></defs></svg>
+                                    </div>
+                                    <div class="invo-social-name">
+                                        <p class="font-md-grey color-grey">NO 1 OKO-OGBA ROAD, IRHIRHI JUNCTION. BENIN EDO STATE. NIGERIA</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="invoice-header-contact pt-15">
+
+                                <div class="invo-cont-wrap">
+                                    <div class="invo-social-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_6_108)"><path d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7L12 13L21 7" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath ><rect width="24" height="24" fill="white"/></clipPath></defs></svg>
+                                    </div>
+                                    <div class="invo-social-name">
+                                        <a href="mailto:RESERVATION@LIORACITYEVENTCENTER.COM" class="font-18 color-grey">info@lioracityeventcenter.com</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invo-head-content">
+                            <div class="train-header-sec">
+                                <h1 class="train-txt">INVOICE</h1>
+                                <div class="invo-head-wrap">
+                                    <div class="w-40">Invoice No: </div>
+                                    <div class="invo-num inter-400">#<?php echo $data['booking_id'];  ?></div>
+                                </div>
+                                <div class="invo-head-wrap invoi-date-wrap">
+                                    <div class="w-40">Invoice Date: </div>
+                                    <div class="invo-num inter-400"><?php echo date('d-m-Y'); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!--Header end here -->
+                <!--Invoice content start here -->
+                <section class="bus-booking-content pt-40" id="train_booking">
+                    <div class="container">
+                        <!--Invoice owner name start here -->
+                        <div class="invoice-owner-conte-wrap">
+                            <div class="invo-to-wrap width-50">
+                                <div class="invoice-to-content">
+                                    <p class="font-md color-light-black">Customer Info: </p>
+                                    <h2 class="font-lg color-train pt-10"><?php echo $data['customer_fullname']; ?> </h2>
+                                    <p class="font-md-grey color-grey pt-10">Phone: <?php echo $data['customer_phone']; ?> <br> Email: <?php echo $data['customer_email']; ?></p>
+                                </div>
+                            </div>
+                            <div class="invo-pay-to-wrap width-50">
+                                <div class="movie-detail-col train-detail-col border-bottom table-bg">
+                                    <div class="font-md color-light-black w-90 text-left">Contact Person Details:</div>
+                                    <div class="font-md-grey color-grey" ></div>
+                                </div>
+                                <div class="movie-detail-col border-bottom  train-detail-col">
+                                    <div class="font-md color-light-black w-40 text-left">Name:</div>
+                                    <div class="font-md-grey color-grey" > <?php echo $data['customer_contact_person_fullname']; ?> </div>
+                                </div>
+                                <div class="movie-detail-col border-bottom table-bg train-detail-col train-detail-col">
+                                    <div class="font-md color-light-black w-40 text-left">  phone:</div>
+                                    <div class="font-md-grey color-grey" ><?php echo $data['customer_contact_person_phone']; ?></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--Invoice owner name end here -->
+                        <!--Train info details start -->
+                        <div class="money-send-title-wrap mt pt-40">
+                            <h3 class="font-lg color-train transfer-title">Booking Info</h3>
+                            <div class="mon-sent-content-wrap">
+                                <div class="mon-send-left-data">
+                                    <div class="mon-send-col-one">
+                                        <span class="font-sm-500 color-light-black">Booking Stauts:</span>
+                                        <span class="font-sm color-grey"><?php echo $data['status']; ?></span>
+                                    </div>
+                                    <div class="mon-send-col-one">
+                                        <span class="font-sm-500 color-light-black">Booking From:</span>
+                                        <span class="font-sm color-grey"><?php  echo $data['from']; ?></span>
+                                    </div>
+                                    <div class="mon-send-col-one">
+                                        <span class="font-sm-500 color-light-black">Usage  Time:</span>
+                                        <span class="font-sm color-grey"><?php echo $data['time_start']; ?> to <?php echo $data['time_end']; ?></span>
+                                    </div>
+
+                                </div>
+                                <div class="mon-send-right-data">
+                                    <div class="mon-send-col-two">
+                                        <span class="font-sm-500 color-light-black">Number of Guest:</span>
+                                        <span class="font-sm color-grey"><?php echo $data['number_of_guest']; ?></span>
+                                    </div>
+                                    <div class="mon-send-col-two">
+                                        <span class="font-sm-500 color-light-black"> Apply Date:</span>
+                                        <span class="font-sm color-grey"><?php echo $data['apply_date']; ?></span>
+                                    </div>
+                                    <div class="mon-send-col-two">
+                                        <span class="font-sm-500 color-light-black">Event Type:</span>
+                                        <span class="font-sm color-grey"><?php echo $data['type_of_event']; ?></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--Train info details end -->
+                        <!--Train table data start here -->
+                        <div class="table-wrapper pt-40">
+                            <table class="invoice-table train-table">
+                                <thead>
+                                    <tr class="invo-tb-header">
+                                        <th class="font-md color-light-black wid-20">Service Name</th>
+                                        <th class="font-md color-light-black w-40">Description</th>
+                                        <th class="font-md color-light-black width-20">Qty X Price</th>
+                                        <th class="font-md color-light-black wid-20">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="invo-tb-body">
+                                    <?php
+                                    $amountSubtotal = 0.00;
+                                    foreach($data['services'] as $key => $value){
+
+                                        $amountSubtotal = (remove_commas($amountSubtotal) + ($value["quantity"]*remove_commas($value["price"])));
+
+                                        $price_with_comma =  addCommasToMoney(remove_commas($value["price"]));
+
+                                        $pre_sum = addCommasToMoney(($value["quantity"]*remove_commas($value["price"])));
+
+                                        $rapped = wordwrap($value["service_description"], 50, "<br />\n", true);
+                                        echo '<tr class="invo-tb-row">
+                                                <td class="font-sm"> '.$value["service_name"].'</td>
+                                                <td class="font-sm"> '. $rapped.'</td>
+                                                 <td class="font-sm ">&nbsp; '.$value["quantity"].' x &#8358;'.$price_with_comma.'</td>
+                                                <td class="font-sm ">&nbsp; &#8358;'.$pre_sum.'</td>
+                                            </tr>';
+                                        }
+                                     ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Train table data end here -->
+                        <!--Invoice additional info start here -->
+                        <div class="invo-addition-wrap pt-20">
+                            <div class="invo-add-info-content">
+                                <?php if(isset($data['message']) && !empty($data['message'])){ ?>
+                                    <h3 class="font-md color-light-black">Additional Information:</h3>
+                                    <p class="font-sm color-grey pt-10"><?php echo isset($data['message'])?$data['message']:""; ?>
+                                    </p>
+                                <?php } ?>
+
+                            </div>
+                            <div class="invo-bill-total width-30">
+                                <table class="invo-total-table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="font-md color-light-black ">Sub Total:</td>
+                                            <td class="font-md-grey color-grey text-right">&#8358;<?php echo addCommasToMoney($amountSubtotal); ?></td>
+                                        </tr>
+                                        <?php if(!empty($data['tax'])){
+                                            ?>
+
+                                            <tr class="tax-row bottom-border">
+                                            <td class="font-md color-light-black ">Tax <span class="font-md color-grey"></span></td>
+                                            <td class="font-md-grey color-grey text-right">&#8358;<?php echo !empty($data['tax']) ? addCommasToMoney($data['tax']):"" ; ?></td>
+                                        </tr>
+                                        <?php
+                                        }
+                                        if(!empty($data['discount'])){
+                                            ?>
+
+                                            <tr class="tax-row bottom-border">
+                                            <td class="font-md color-light-black ">Discount <span class="font-md color-grey"></span></td>
+                                            <td class="font-md-grey color-grey text-right">&#8358; <?php echo !empty($data['discount']) == true ? '-'.addCommasToMoney($data['discount']):"" ; ?></td>
+                                        </tr>
+                                        <?php
+                                        }
+                                        ?>
+
+                                        <?php
+
+                                        $discount = empty($data['discount']) == true? 0.0:remove_commas($data['discount']);
+                                        $total = $discount == 0 ? ($amountSubtotal):($amountSubtotal - $discount);
+                                        ?>
+                                        <tr class="invo-grand-total">
+                                            <td class="font-18-700 color-train font-18-500 pt-20">Grand Total:</td>
+                                            <td class="font-18-500 color-light-black pt-20 text-right">&#8358;<?php echo addCommasToMoney($total); ?></td>
+                                        </tr>
+                                        <tr class="invo-grand-total">
+                                            <td class="font-18-700 color-train font-18-500 pt-20">Amount Paid:</td>
+                                            <td class="font-18-500 color-light-green pt-20 text-right" style="color:green;">&#8358;<?php echo addCommasToMoney($totalPaid); ?></td>
+                                        </tr>
+                                        <tr class="invo-grand-total">
+                                            <td class="font-18-700 color-train font-18-500 pt-20">To Balance:</td>
+                                            <td class="font-18-500 color-light-red pt-20 text-right" style="color: red;">&#8358;<?php $balance= (($total - $totalPaid) <= 0)? 0.00: ($total - $totalPaid); echo addCommasToMoney($balance); ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--Invoice additional info end here -->
+                        <!-- agreement -->
+                        <!--Invoice additional info start here -->
+                        <div class="invo-addition-wrap pt-50">
+                            <div class=" width-100 ">
+                                <!-- <h3 class="font-md color-light-black text-left">AGREEMENT </h3> -->
+                                <div class="font-sm color-grey pt-10"> <?php
+                                $agreementDescription = isset($agreement['description']) ? html_entity_decode(html_entity_decode($agreement['description'], ENT_QUOTES), ENT_QUOTES): "";
+                                $escapedDescription = str_replace("'", "\\'", $agreementDescription);
+                                echo $escapedDescription; ?></div>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- agreement ended -->
+                    </div>
+                    <div class="train-thanks-bg bg-train ">
+                        <p>Thank you for choosing our service. See you soon 🙂 . contact us <a href="tel:+12345678899" class="font-18 color-white ">+234 704 116 7461</a></p>
+                    </div>
+                </section>
+                <!--Invoice content end here -->
+            </div>
+            <!--Bottom content start here -->
+            <section class="agency-bottom-content d-print-none" id="agency_bottom">
+                <!--Print-download content start here -->
+                <div class="invo-buttons-wrap">
+                    <div class="invo-print-btn invo-btns">
+                        <!-- <a href="javascript:window.print()" class="print-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <g clip-path="url(#clip0_10_61)">
+                                    <path d="M17 17H19C19.5304 17 20.0391 16.7893 20.4142 16.4142C20.7893 16.0391 21 15.5304 21 15V11C21 10.4696 20.7893 9.96086 20.4142 9.58579C20.0391 9.21071 19.5304 9 19 9H5C4.46957 9 3.96086 9.21071 3.58579 9.58579C3.21071 9.96086 3 10.4696 3 11V15C3 15.5304 3.21071 16.0391 3.58579 16.4142C3.96086 16.7893 4.46957 17 5 17H7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M17 9V5C17 4.46957 16.7893 3.96086 16.4142 3.58579C16.0391 3.21071 15.5304 3 15 3H9C8.46957 3 7.96086 3.21071 7.58579 3.58579C7.21071 3.96086 7 4.46957 7 5V9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M7 15C7 14.4696 7.21071 13.9609 7.58579 13.5858C7.96086 13.2107 8.46957 13 9 13H15C15.5304 13 16.0391 13.2107 16.4142 13.5858C16.7893 13.9609 17 14.4696 17 15V19C17 19.5304 16.7893 20.0391 16.4142 20.4142C16.0391 20.7893 15.5304 21 15 21H9C8.46957 21 7.96086 20.7893 7.58579 20.4142C7.21071 20.0391 7 19.5304 7 19V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_10_61">
+                                        <rect width="24" height="24" fill="white"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <span class="inter-700 medium-font">Print</span>
+                        </a> -->
+                    </div>
+                    <div class="invo-down-btn invo-btns">
+                        <a class="download-btn" id="generatePDF">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_5_246)">
+                                <path d="M4 17V19C4 19.5304 4.21071 20.0391 4.58579 20.4142C4.96086 20.7893 5.46957 21 6 21H18C18.5304 21 19.0391 20.7893 19.4142 20.4142C19.7893 20.0391 20 19.5304 20 19V17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 11L12 16L17 11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 4V16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath id="clip0_5_246"><rect width="24" height="24" fill="white"/></clipPath></defs>
+                            </svg>
+                            <span class="inter-700 medium-font">Download</span>
+                        </a>
+                    </div>
+                </div>
+                <!--Print-download content end here -->
+                <!--Note content start-->
+                <!-- <div class="invo-note-wrap">
+                    <div class="note-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_8_240)"><path d="M14 3V7C14 7.26522 14.1054 7.51957 14.2929 7.70711C14.4804 7.89464 14.7348 8 15 8H19" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 21H7C6.46957 21 5.96086 20.7893 5.58579 20.4142C5.21071 20.0391 5 19.5304 5 19V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H14L19 8V19C19 19.5304 18.7893 20.0391 18.4142 20.4142C18.0391 20.7893 17.5304 21 17 21Z" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7H10" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 13H15" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 17H15" stroke="#12151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath id="clip0_8_240"><rect width="24" height="24" fill="white"/>
+                        </clipPath></defs></svg>
+                        <span class="font-md color-light-black">Note:</span>
+                    </div>
+                    <h3 class="font-md-grey color-grey note-desc">This is computer generated receipt and does not require physical signature.</h3>
+                </div> -->
+                <!--Note content end-->
+            </section>
+            <!--Bottom content end here -->
+        </div>
+    </div>
+    <!--Invoice wrap End here -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jspdf.min.js"></script>
+    <script src="assets/js/html2canvas.min.js"></script>
+    <!-- <script src="assets/js/custom.js"></script>  no longer needed, it has been brought to this page because of autonaming of the pdfs-->
+    <script>
+        // Generate dynamic PDF name
+
+        var customer_name = "<?php echo $data['customer_fullname']; ?>";
+        var pdfName = customer_name +'_Invoice_' + new Date().getTime() + '.pdf';
+
+
+        //option 3
+        (function ($) {
+          'use strict';
+
+          /*--------------------------------------------------------------
+          ## Down Load Button Function
+          ----------------------------------------------------------------*/
+          $('#generatePDF').on('click', function () {
+            var downloadSection = $('#download_section');
+            var cWidth = downloadSection.width();
+            var cHeight = downloadSection.height();
+            var topLeftMargin = 10;  // Set margin for the first page
+            var pdfWidth = cWidth + topLeftMargin * 2;
+            var pdfHeight = pdfWidth * 1.5 + topLeftMargin * 2;
+            var canvasImageWidth = cWidth;
+            var canvasImageHeight = cHeight;
+            var totalPDFPages = Math.ceil(cHeight / pdfHeight);
+
+            html2canvas(downloadSection[0], { allowTaint: true }).then(function (
+              canvas
+            ) {
+              var imgData = canvas.toDataURL('image/jpeg', 1.0);
+              var pdf = new jsPDF('p', 'pt', [pdfWidth, pdfHeight]);
+
+              // Add the first page with margin at the top
+              pdf.addImage(
+                imgData,
+                'JPG',
+                topLeftMargin,
+                topLeftMargin,  // Make sure this creates the margin at the top
+                canvasImageWidth,
+                canvasImageHeight
+              );
+
+              // Loop through and add additional pages if necessary
+              for (var i = 1; i < totalPDFPages; i++) {
+                pdf.addPage(pdfWidth, pdfHeight);
+                pdf.addImage(
+                  imgData,
+                  'JPG',
+                  topLeftMargin,
+                  -(pdfHeight * i) + topLeftMargin,  // Ensure content flows properly
+                  canvasImageWidth,
+                  canvasImageHeight
+                );
+              }
+
+              pdf.save(pdfName);
+            });
+          });
+        })(jQuery); // End of use strict
+
+
+    </script>
+</body>
+</html>
