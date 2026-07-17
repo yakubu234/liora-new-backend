@@ -55,6 +55,7 @@
     table-layout: fixed;
 }
 
+.receipt-service-name,
 .receipt-service-description {
     overflow-wrap: anywhere;
     word-break: break-word;

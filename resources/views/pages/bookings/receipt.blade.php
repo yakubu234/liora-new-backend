@@ -124,7 +124,7 @@
                             <tbody class="invo-tb-body">
                             @forelse ($booking['services'] as $service)
                                 <tr class="invo-tb-row">
-                                    <td class="font-sm">{{ $service['name'] }}</td>
+                                    <td class="font-sm receipt-service-name">{!! nl2br(e(wordwrap((string) $service['name'], 40, "\n", true))) !!}</td>
                                     <td class="font-sm receipt-service-description">{!! nl2br(e(wordwrap((string) $service['description'], 35, "\n", true))) !!}</td>
                                     <td class="font-sm">&nbsp; {{ $service['quantity'] }} x &#8358;{{ $money($service['unit_price']) }}</td>
                                     <td class="font-sm">&nbsp; &#8358;{{ $money($service['line_total']) }}</td>
