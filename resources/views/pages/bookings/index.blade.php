@@ -75,9 +75,11 @@
                                     </a>
                                 @endif
 
-                                <a href="{{ route('bookings.show', ['bookingId' => $booking['bookign_id'], 'open' => 'approval']) }}" class="btn btn-success btn-sm" title="Approve or Decline">
-                                    <i class="fas fa-check-circle"></i>
-                                </a>
+                                @if ($canApproveBookings)
+                                    <a href="{{ route('bookings.show', ['bookingId' => $booking['bookign_id'], 'open' => 'approval']) }}" class="btn btn-success btn-sm" title="Approve or Decline">
+                                        <i class="fas fa-check-circle"></i>
+                                    </a>
+                                @endif
 
                                 @if ($userType >= 5)
                                     <form action="{{ route('bookings.destroy', $booking['bookign_id']) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this booking permanently?');">

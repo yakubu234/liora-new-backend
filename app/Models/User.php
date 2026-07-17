@@ -75,4 +75,18 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class, 'permission_user')
             ->withTimestamps();
     }
+
+    public function hasPermission(string $slug): bool
+    {
+        if ((int) $this->type >= 5) {
+            return true;
+        }
+
+        $this->loadMissing(['roles.permissions', 'permissions']);
+
+        return $this->permissions->contains('slug', $slug)
+            || $this->roles->contains(
+                fn (Role $role): bool => $role->permissions->contains('slug', $slug)
+            );
+    }
 }

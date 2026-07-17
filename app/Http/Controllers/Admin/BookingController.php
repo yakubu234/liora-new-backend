@@ -26,6 +26,7 @@ class BookingController extends Controller
             'description' => 'Review all bookings and jump into details, edits, approvals, or delete actions.',
             'bookings' => $this->getBookingTableRows(),
             'isBalancePage' => false,
+            'canApproveBookings' => $this->canApproveBookings(),
         ]);
     }
 
@@ -37,6 +38,7 @@ class BookingController extends Controller
             'description' => 'Track bookings that still have outstanding balances.',
             'bookings' => $this->getBookingTableRows(true),
             'isBalancePage' => true,
+            'canApproveBookings' => $this->canApproveBookings(),
         ]);
     }
 
@@ -133,6 +135,8 @@ class BookingController extends Controller
 
     public function updateApproval(Request $request, string $bookingId): RedirectResponse
     {
+        abort_unless($this->canApproveBookings(), 403);
+
         $booking = $this->getBookingDetails($bookingId);
 
         $validated = $request->validate([
@@ -838,7 +842,8 @@ class BookingController extends Controller
             'amount_paid' => $amountPaid,
             'balance_due' => $balanceDue,
             'can_add_balance' => $balanceDue > 0,
-            'can_approve' => in_array($booking->status, [null, '', 'active'], true),
+            'can_manage_approval' => $this->canApproveBookings(),
+            'can_approve' => $this->canApproveBookings() && in_array($booking->status, [null, '', 'active'], true),
             'can_generate_invoice' => $booking->status === 'approved',
             'form' => [
                 'customer_email' => $booking->customer_email,
@@ -989,5 +994,10 @@ class BookingController extends Controller
     private function isSuperAdmin(): bool
     {
         return (int) (Auth::user()?->type ?? 0) >= 5;
+    }
+
+    private function canApproveBookings(): bool
+    {
+        return Auth::user()?->hasPermission('approve-bookings') ?? false;
     }
 }

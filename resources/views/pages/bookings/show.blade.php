@@ -231,6 +231,7 @@
         </div>
     </div>
 
+    @if ($booking['can_manage_approval'])
     <div class="modal fade" id="approvalModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -268,6 +269,7 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 
 @push('scripts')
@@ -303,7 +305,7 @@
                 updateBalancePreview();
             }
 
-            @if (($openModal ?? null) === 'approval')
+            @if ($booking['can_manage_approval'] && ($openModal ?? null) === 'approval')
                 $('#approvalModal').modal('show');
             @endif
         });
@@ -314,7 +316,7 @@
             });
         @endif
 
-        @if ($errors->has('status'))
+        @if ($booking['can_manage_approval'] && $errors->has('status'))
             $(function () {
                 $('#approvalModal').modal('show');
             });
