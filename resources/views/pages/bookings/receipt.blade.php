@@ -147,8 +147,14 @@
                             <table class="invo-total-table">
                                 <tbody>
                                 <tr><td class="font-md color-light-black">Sub Total:</td><td class="font-md-grey color-grey text-right">&#8358;{{ $money($booking['sub_total']) }}</td></tr>
+                                @foreach ($booking['pre_tax_deductions'] as $deduction)
+                                    <tr><td class="font-md color-light-black">Less for tax: {{ $deduction['name'] }}</td><td class="font-md-grey color-grey text-right">-&#8358;{{ $money($deduction['amount']) }}</td></tr>
+                                @endforeach
+                                @if ($booking['tax_rate'] > 0)
+                                    <tr><td class="font-md color-light-black">Taxable Amount:</td><td class="font-md-grey color-grey text-right">&#8358;{{ $money($booking['taxable_amount']) }}</td></tr>
+                                @endif
                                 @if ($booking['tax'] > 0)
-                                    <tr class="tax-row bottom-border"><td class="font-md color-light-black">Tax</td><td class="font-md-grey color-grey text-right">&#8358;{{ $money($booking['tax']) }}</td></tr>
+                                    <tr class="tax-row bottom-border"><td class="font-md color-light-black">Tax ({{ rtrim(rtrim(number_format($booking['tax_rate'], 4, '.', ''), '0'), '.') }}%)</td><td class="font-md-grey color-grey text-right">&#8358;{{ $money($booking['tax']) }}</td></tr>
                                 @endif
                                 @if ($booking['discount'] > 0)
                                     <tr class="tax-row bottom-border"><td class="font-md color-light-black">Discount</td><td class="font-md-grey color-grey text-right">-&#8358;{{ $money($booking['discount']) }}</td></tr>

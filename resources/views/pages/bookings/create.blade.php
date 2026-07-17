@@ -216,7 +216,10 @@
             @if ($isEditMode)
                 @method('PUT')
             @endif
-            <input type="hidden" name="tax" value="{{ $value('tax', 0) }}">
+            <input type="hidden" id="tax_rate" value="{{ $taxRate }}">
+            @php
+                $selectedDeductionIds = array_map('intval', old('pre_tax_deduction_ids', $selectedPreTaxDeductionIds));
+            @endphp
 
             <div class="card-body">
                 <div class="booking-step-nav">
@@ -430,13 +433,33 @@
 
                         <div class="col-lg-4 order-2 order-lg-1">
                             <div class="booking-summary-card p-4">
+                                <h4 class="mb-3">Pre-tax deductions</h4>
+                                <p class="text-muted small">Select every deduction that should be excluded from the taxable amount for this booking.</p>
+                                <div class="mb-4" id="pre-tax-deduction-options">
+                                    @forelse ($preTaxDeductions as $deduction)
+                                        <div class="custom-control custom-checkbox mb-2">
+                                            <input type="checkbox" class="custom-control-input pre-tax-deduction-input" id="pre_tax_deduction_{{ $deduction['id'] }}" name="pre_tax_deduction_ids[]" value="{{ $deduction['id'] }}" {{ in_array($deduction['id'], $selectedDeductionIds, true) ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="pre_tax_deduction_{{ $deduction['id'] }}">
+                                                {{ $deduction['name'] }} — NGN {{ number_format($deduction['amount'], 2) }}
+                                                @if ($deduction['is_default']) <span class="badge badge-info ml-1">Default</span> @endif
+                                            </label>
+                                        </div>
+                                    @empty
+                                        <p class="text-muted">No active pre-tax deductions are configured.</p>
+                                    @endforelse
+                                </div>
                                 <h4 class="mb-4">Totals</h4>
                                 <div class="summary-line">
                                     <span>Sub total</span>
                                     <strong id="summary-subtotal">NGN 0.00</strong>
                                 </div>
+                                <div id="summary-deductions"></div>
                                 <div class="summary-line">
-                                    <span>Tax</span>
+                                    <span>Taxable amount</span>
+                                    <strong id="summary-taxable">NGN 0.00</strong>
+                                </div>
+                                <div class="summary-line">
+                                    <span>Tax ({{ rtrim(rtrim(number_format($taxRate, 4, '.', ''), '0'), '.') }}%)</span>
                                     <strong id="summary-tax">NGN 0.00</strong>
                                 </div>
                                 <div class="summary-line">
@@ -711,20 +734,28 @@
         function recalculateTotals() {
             const rows = getSelectedRows();
             const subTotal = rows.reduce((sum, row) => sum + row.total, 0);
-            const tax = parseMoney(document.querySelector('input[name="tax"]').value);
+            const taxRate = parseMoney(document.getElementById('tax_rate').value);
+            const availablePreTaxDeductions = @json($preTaxDeductions);
+            const selectedDeductionIds = Array.from(document.querySelectorAll('.pre-tax-deduction-input:checked')).map(input => Number(input.value));
+            const selectedDeductions = availablePreTaxDeductions.filter(item => selectedDeductionIds.includes(Number(item.id)));
+            const deductionTotal = selectedDeductions.reduce((sum, item) => sum + parseMoney(item.amount), 0);
+            const taxableAmount = Math.max(subTotal - deductionTotal, 0);
+            const tax = taxableAmount * (taxRate / 100);
             const discount = parseMoney(document.getElementById('discount').value);
             const amountPaid = parseMoney(document.getElementById('amount_paid').value);
             const total = Math.max((subTotal + tax) - discount, 0);
             const balance = Math.max(total - amountPaid, 0);
 
             document.getElementById('summary-subtotal').textContent = formatMoney(subTotal);
+            document.getElementById('summary-deductions').innerHTML = selectedDeductions.map(item => `<div class="summary-line text-muted"><span>Less for tax: ${item.name}</span><strong>-${formatMoney(item.amount)}</strong></div>`).join('');
+            document.getElementById('summary-taxable').textContent = formatMoney(taxableAmount);
             document.getElementById('summary-tax').textContent = formatMoney(tax);
             document.getElementById('summary-discount').textContent = formatMoney(discount);
             document.getElementById('summary-total').textContent = formatMoney(total);
             document.getElementById('summary-paid').textContent = formatMoney(amountPaid);
             document.getElementById('summary-balance').textContent = formatMoney(balance);
 
-            return { rows, subTotal, tax, discount, amountPaid, total, balance };
+            return { rows, subTotal, selectedDeductions, deductionTotal, taxableAmount, taxRate, tax, discount, amountPaid, total, balance };
         }
 
         function addServiceRow(serviceId, quantity = 1) {
@@ -801,7 +832,9 @@
 
             previewTotalsBody.innerHTML = `
                 <tr><th>Sub total</th><td>${formatMoney(totals.subTotal)}</td></tr>
-                <tr><th>Tax</th><td>${formatMoney(totals.tax)}</td></tr>
+                ${totals.selectedDeductions.map(item => `<tr><th>Less for tax: ${item.name}</th><td>-${formatMoney(item.amount)}</td></tr>`).join('')}
+                <tr><th>Taxable amount</th><td>${formatMoney(totals.taxableAmount)}</td></tr>
+                <tr><th>Tax (${totals.taxRate}%)</th><td>${formatMoney(totals.tax)}</td></tr>
                 <tr><th>Discount</th><td>${formatMoney(totals.discount)}</td></tr>
                 <tr><th>Total overall</th><td>${formatMoney(totals.total)}</td></tr>
                 <tr><th>Amount paid</th><td>${formatMoney(totals.amountPaid)}</td></tr>
@@ -1063,6 +1096,7 @@
 
         document.getElementById('discount').addEventListener('input', recalculateTotals);
         document.getElementById('amount_paid').addEventListener('input', recalculateTotals);
+        document.querySelectorAll('.pre-tax-deduction-input').forEach(input => input.addEventListener('change', recalculateTotals));
 
         prevStepBtn.addEventListener('click', () => {
             if (currentStep > 1) {

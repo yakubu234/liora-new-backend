@@ -216,6 +216,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('settings.tax-deductions') }}" class="nav-link {{ request()->routeIs('settings.tax-deductions*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tax & Deductions</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('settings.event-types') }}" class="nav-link {{ request()->routeIs('settings.event-types') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Type of Event</p>

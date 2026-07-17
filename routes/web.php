@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\SmtpController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\TaxSettingsController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
@@ -72,6 +73,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings/agreement', [AgreementController::class, 'update'])->name('settings.agreement.update');
     Route::get('/settings/receipt-signature', [ReceiptSignatureController::class, 'edit'])->name('settings.receipt-signature');
     Route::post('/settings/receipt-signature', [ReceiptSignatureController::class, 'update'])->name('settings.receipt-signature.update');
+    Route::get('/settings/tax-deductions', [TaxSettingsController::class, 'edit'])->name('settings.tax-deductions');
+    Route::post('/settings/tax-deductions', [TaxSettingsController::class, 'update'])->name('settings.tax-deductions.update');
     Route::get('/settings/event-types', [EventTypeController::class, 'index'])->name('settings.event-types');
     Route::get('/settings/event-types/create', [EventTypeController::class, 'create'])->name('settings.event-types.create');
     Route::post('/settings/event-types', [EventTypeController::class, 'store'])->name('settings.event-types.store');

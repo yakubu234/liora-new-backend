@@ -233,6 +233,12 @@ class BookingController extends Controller
             ],
             'quantities' => ['required', 'array', 'min:1'],
             'quantities.*' => ['required', 'integer', 'min:1'],
+            'pre_tax_deduction_ids' => ['nullable', 'array'],
+            'pre_tax_deduction_ids.*' => [
+                'integer',
+                'distinct',
+                Rule::exists('pre_tax_deductions', 'id')->where(fn ($query) => $query->where('is_active', true)),
+            ],
             'discount' => ['nullable', 'numeric', 'min:0'],
             'amount_paid' => ['nullable', 'numeric', 'min:0'],
             'message' => ['nullable', 'string', 'max:5000'],
@@ -291,7 +297,15 @@ class BookingController extends Controller
         }
 
         $subTotal = $serviceRows->sum(fn (array $service): float => $service['unit_price'] * $service['quantity']);
-        $tax = $this->parseMoney($validated['tax'] ?? 0);
+        $taxConfiguration = $this->getTaxConfiguration(
+            $existingBooking,
+            collect($validated['pre_tax_deduction_ids'] ?? [])->map(fn ($id) => (int) $id)->all()
+        );
+        $taxRate = $taxConfiguration['rate'];
+        $preTaxDeductions = $taxConfiguration['deductions'];
+        $deductionTotal = collect($preTaxDeductions)->sum('amount');
+        $taxableAmount = max($subTotal - $deductionTotal, 0);
+        $tax = round($taxableAmount * ($taxRate / 100), 2);
         $discount = $this->parseMoney($validated['discount'] ?? 0);
         $inputAmountPaid = $this->parseMoney($validated['amount_paid'] ?? 0);
         $finalTotal = max(($subTotal + $tax) - $discount, 0);
@@ -310,6 +324,9 @@ class BookingController extends Controller
                 $validated,
                 $serviceRows,
                 $tax,
+                $taxRate,
+                $taxableAmount,
+                $preTaxDeductions,
                 $discount,
                 $paymentDelta,
                 $finalTotal,
@@ -329,6 +346,9 @@ class BookingController extends Controller
                         'message' => $validated['message'] ?? null,
                         'admin_id' => $staff?->fullname ?? $staff?->name,
                         'tax' => $this->decimalString($tax),
+                        'tax_rate' => $this->decimalString($taxRate),
+                        'taxable_amount' => $this->decimalString($taxableAmount),
+                        'pre_tax_deductions' => json_encode($preTaxDeductions, JSON_THROW_ON_ERROR),
                         'total_amount' => number_format($finalTotal, 2, '.', ','),
                         'discount' => $this->decimalString($discount),
                         'updated_at' => now(),
@@ -388,6 +408,9 @@ class BookingController extends Controller
             $validated,
             $serviceRows,
             $tax,
+            $taxRate,
+            $taxableAmount,
+            $preTaxDeductions,
             $discount,
             $amountPaid,
             $finalTotal,
@@ -409,6 +432,9 @@ class BookingController extends Controller
                 'status' => 'active',
                 'admin_id' => $staff?->fullname ?? $staff?->name,
                 'tax' => $this->decimalString($tax),
+                'tax_rate' => $this->decimalString($taxRate),
+                'taxable_amount' => $this->decimalString($taxableAmount),
+                'pre_tax_deductions' => json_encode($preTaxDeductions, JSON_THROW_ON_ERROR),
                 'total_amount' => number_format($finalTotal, 2, '.', ','),
                 'discount' => $this->decimalString($discount),
                 'created_at' => now(),
@@ -470,12 +496,28 @@ class BookingController extends Controller
 
     private function buildFormViewData(?array $booking = null): array
     {
+        $taxConfiguration = $this->getTaxConfiguration($booking);
+        $availablePreTaxDeductions = $this->getAvailablePreTaxDeductions();
+        $snapshotDeductions = collect($booking['pre_tax_deductions'] ?? []);
+        $selectedPreTaxDeductionIds = $booking
+            ? $availablePreTaxDeductions
+                ->filter(function (array $available) use ($snapshotDeductions): bool {
+                    return $snapshotDeductions->contains(function (array $snapshot) use ($available): bool {
+                        return (! empty($snapshot['id']) && (int) $snapshot['id'] === $available['id'])
+                            || strcasecmp((string) ($snapshot['name'] ?? ''), $available['name']) === 0;
+                    });
+                })->pluck('id')->all()
+            : $availablePreTaxDeductions->where('is_default', true)->pluck('id')->all();
+
         return [
             'services' => $this->getEnabledServices(),
             'eventTypes' => $this->getEnabledEventTypes(),
             'bookedDates' => $this->getBookedDates($booking['bookign_id'] ?? null),
             'agreementText' => $this->getAgreementText(),
             'booking' => $booking,
+            'taxRate' => $taxConfiguration['rate'],
+            'preTaxDeductions' => $availablePreTaxDeductions->all(),
+            'selectedPreTaxDeductionIds' => $selectedPreTaxDeductionIds,
         ];
     }
 
@@ -653,6 +695,53 @@ class BookingController extends Controller
         ];
     }
 
+    private function getTaxConfiguration(?array $booking = null, ?array $selectedIds = null): array
+    {
+        if ($booking && array_key_exists('tax_rate', $booking) && $selectedIds === null) {
+            return [
+                'rate' => (float) $booking['tax_rate'],
+                'deductions' => $booking['pre_tax_deductions'] ?? [],
+            ];
+        }
+
+        $rate = $booking && array_key_exists('tax_rate', $booking)
+            ? (float) $booking['tax_rate']
+            : (Schema::hasTable('tax_settings')
+            ? (float) (DB::table('tax_settings')->orderByDesc('id')->value('rate') ?? 0)
+            : 0.0);
+
+        $deductions = $selectedIds === null
+            ? ($booking['pre_tax_deductions'] ?? [])
+            : $this->getAvailablePreTaxDeductions()
+                ->whereIn('id', $selectedIds)
+                ->map(fn (array $item): array => [
+                    'id' => $item['id'],
+                    'name' => $item['name'],
+                    'amount' => $item['amount'],
+                ])->values()->all();
+
+        return ['rate' => $rate, 'deductions' => $deductions];
+    }
+
+    private function getAvailablePreTaxDeductions(): Collection
+    {
+        if (! Schema::hasTable('pre_tax_deductions')) {
+            return collect();
+        }
+
+        return DB::table('pre_tax_deductions')
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get(['id', 'name', 'amount', 'is_default'])
+            ->map(fn (object $item): array => [
+                'id' => (int) $item->id,
+                'name' => $item->name,
+                'amount' => $this->parseMoney($item->amount),
+                'is_default' => (bool) $item->is_default,
+            ]);
+    }
+
     private function getBookingDetails(string $bookingId): array
     {
         $booking = DB::table('bookings')
@@ -702,6 +791,15 @@ class BookingController extends Controller
 
         $subTotal = $services->sum('line_total');
         $tax = $this->parseMoney($booking->tax);
+        $taxRate = property_exists($booking, 'tax_rate') ? (float) $booking->tax_rate : 0.0;
+        $preTaxDeductions = property_exists($booking, 'pre_tax_deductions') && $booking->pre_tax_deductions
+            ? (json_decode($booking->pre_tax_deductions, true) ?: [])
+            : [];
+        $preTaxDeductionTotal = collect($preTaxDeductions)
+            ->sum(fn (array $item): float => $this->parseMoney($item['amount'] ?? 0));
+        $taxableAmount = property_exists($booking, 'taxable_amount')
+            ? $this->parseMoney($booking->taxable_amount)
+            : max($subTotal - $preTaxDeductionTotal, 0);
         $discount = $this->parseMoney($booking->discount);
         $finalTotal = max(($subTotal + $tax) - $discount, 0);
         $amountPaid = $payments->sum('amount');
@@ -719,6 +817,10 @@ class BookingController extends Controller
             'payment_status' => $booking->payment_status ?: 'pending',
             'date_of_application' => $booking->date_of_application,
             'tax' => $tax,
+            'tax_rate' => $taxRate,
+            'taxable_amount' => $taxableAmount,
+            'pre_tax_deductions' => $preTaxDeductions,
+            'pre_tax_deduction_total' => $preTaxDeductionTotal,
             'message' => $booking->message,
             'discount' => $discount,
             'customer_email' => $booking->customer_email,

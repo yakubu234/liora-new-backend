@@ -131,10 +131,17 @@
                         <th>Sub Total</th>
                         <td colspan="2">{{ $currency($booking['sub_total']) }}</td>
                     </tr>
+                    @foreach ($booking['pre_tax_deductions'] as $deduction)
+                        <tr>
+                            <th colspan="4"></th>
+                            <th>Less for tax: {{ $deduction['name'] }}</th>
+                            <td colspan="2">-{{ $currency($deduction['amount']) }}</td>
+                        </tr>
+                    @endforeach
                     <tr>
                         <th colspan="4"></th>
                         <th>Tax</th>
-                        <td colspan="2">{{ $currency($booking['tax']) }}</td>
+                        <td colspan="2">{{ $currency($booking['tax']) }} ({{ rtrim(rtrim(number_format($booking['tax_rate'], 4, '.', ''), '0'), '.') }}% of {{ $currency($booking['taxable_amount']) }})</td>
                     </tr>
                     <tr>
                         <th colspan="4"></th>
