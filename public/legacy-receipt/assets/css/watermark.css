@@ -51,6 +51,16 @@
     z-index: 1;
 }
 
+.train-table {
+    table-layout: fixed;
+}
+
+.receipt-service-description {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+}
+
 /* The saved agreement begins with empty editor-generated blocks. Hide only
    those leading spacers so the first signature follows the balance closely. */
 .receipt-signature-wrap {
